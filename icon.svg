@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background -->
+  <rect width="512" height="512" rx="100" fill="#F4874B"/>
+  <!-- Sky gradient area -->
+  <rect x="0" y="0" width="512" height="380" rx="0" fill="#A8D8EA" opacity="0.25"/>
+  <!-- Road -->
+  <rect x="0" y="376" width="512" height="6" fill="#C8B89A"/>
+  <rect x="0" y="382" width="512" height="80" fill="#888888"/>
+  <rect x="0" y="456" width="512" height="6" fill="#C8B89A"/>
+  <!-- Road dashes -->
+  <rect x="20"  y="416" width="60" height="10" fill="#FFD166" rx="4"/>
+  <rect x="140" y="416" width="60" height="10" fill="#FFD166" rx="4"/>
+  <rect x="260" y="416" width="60" height="10" fill="#FFD166" rx="4"/>
+  <rect x="380" y="416" width="60" height="10" fill="#FFD166" rx="4"/>
+  <!-- Car (white Audi Q7 silhouette, centered, wheels sit on road) -->
+  <g transform="translate(54, 208) scale(2)">
+    <!-- Body -->
+    <path d="M14,62 L14,44 Q14,40 18,40 L36,40 Q40,40 44,34
+             L58,16 Q60,14 64,14 L152,14 Q156,14 158,16
+             L168,34 Q171,40 175,40 L184,40 Q188,40 188,44
+             L188,62 Q188,66 184,66 L18,66 Q14,66 14,62 Z"
+          fill="white"/>
+    <!-- Window -->
+    <path d="M46,38 L60,18 Q62,16 66,16 L150,16 Q154,16 156,18 L166,38 Z"
+          fill="#A8D8EA" opacity="0.85"/>
+    <!-- Rear wheel -->
+    <circle cx="52"  cy="68" r="18" fill="#555"/>
+    <circle cx="52"  cy="68" r="9"  fill="white"/>
+    <!-- Front wheel -->
+    <circle cx="150" cy="68" r="18" fill="#555"/>
+    <circle cx="150" cy="68" r="9"  fill="white"/>
+  </g>
+</svg>

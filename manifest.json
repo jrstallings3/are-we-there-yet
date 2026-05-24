@@ -1,0 +1,19 @@
+{
+  "name": "Are We There Yet?",
+  "short_name": "Are We There Yet?",
+  "description": "Kid-friendly road trip progress tracker",
+  "start_url": "/are-we-there-yet/",
+  "scope": "/are-we-there-yet/",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#A8D8EA",
+  "theme_color": "#F4874B",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
