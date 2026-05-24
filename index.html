@@ -41,6 +41,7 @@
       overflow: hidden;
       width: 100vw;
       height: 100vh;
+      height: 100dvh;
       background: var(--sky);
     }
 
@@ -51,10 +52,13 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: safe center;
       height: 100vh;
+      height: 100dvh;
       background: linear-gradient(180deg, var(--sky) 0%, var(--sky-2) 52%, var(--grass) 52%, var(--grass-2) 100%);
       padding: 20px;
+      padding-top: max(20px, env(safe-area-inset-top, 20px));
+      padding-bottom: max(20px, env(safe-area-inset-bottom, 20px));
       overflow-y: auto;
     }
 
@@ -229,6 +233,7 @@
       display: none;
       width: 100vw;
       height: 100vh;
+      height: 100dvh;
       position: relative;
       overflow: hidden;
     }
@@ -532,12 +537,12 @@
       align-items: center;
       pointer-events: none;
     }
-    .milestone-flag { font-size: clamp(.8rem, 1.7vw, 1.1rem); }
+    .milestone-flag { font-size: clamp(.9rem, 1.7vw, 1.1rem); }
     .milestone-name {
       background: var(--cream);
       border-radius: 8px;
       padding: 2px 6px;
-      font-size: clamp(.4rem, .95vw, .62rem);
+      font-size: clamp(.62rem, .95vw, .72rem);
       font-weight: 700;
       color: var(--text-dark);
       white-space: nowrap;
@@ -567,13 +572,13 @@
       gap: 3px;
       box-shadow: 0 2px 8px rgba(244,135,75,.3);
     }
-    .stop-marker-emoji { font-size: clamp(.65rem, 1.5vw, .9rem); }
+    .stop-marker-emoji { font-size: clamp(.75rem, 1.5vw, .9rem); }
     .stop-marker-lbl {
-      font-size: clamp(.36rem, .85vw, .55rem);
+      font-size: clamp(.55rem, .85vw, .65rem);
       font-weight: 800;
       color: white;
       white-space: nowrap;
-      max-width: 58px;
+      max-width: 72px;
       overflow: hidden;
       text-overflow: ellipsis;
     }
@@ -692,10 +697,10 @@
     }
     .btn-pill:active { transform: scale(.94); }
 
-    #refresh-btn  { bottom:12px; right:14px; background:var(--orange); color:white; padding:9px 14px; box-shadow:0 3px 0 #C96830; }
+    #refresh-btn  { bottom:calc(12px + env(safe-area-inset-bottom, 0px)); right:14px; background:var(--orange); color:white; padding:9px 14px; box-shadow:0 3px 0 #C96830; }
     #refresh-btn:disabled { opacity:.6; cursor:default; }
-    #add-stop-btn { bottom:52px; right:14px; background:#F4C261; color:var(--text-dark); padding:9px 13px; box-shadow:0 3px 0 #C89830; }
-    #new-trip-btn { bottom:12px; left:14px;  background:#A8D8EA; color:var(--text-dark); padding:9px 13px; box-shadow:0 3px 0 #78A8BA; }
+    #add-stop-btn { bottom:calc(52px + env(safe-area-inset-bottom, 0px)); right:14px; background:#F4C261; color:var(--text-dark); padding:9px 13px; box-shadow:0 3px 0 #C89830; }
+    #new-trip-btn { bottom:calc(12px + env(safe-area-inset-bottom, 0px)); left:14px;  background:#A8D8EA; color:var(--text-dark); padding:9px 13px; box-shadow:0 3px 0 #78A8BA; }
 
     /* ── ADD STOP MODAL ── */
     #modal-overlay {
@@ -1217,13 +1222,20 @@ function launchMain() {
   buildMarkers();
   buildSnackMeter();
   placeAnimals();
-  renderUI();
-  positionCar(S.progress);
-  fetchWeather();
-  updateFromGPS();
+  // Defer until after browser reflows the newly-visible main screen,
+  // otherwise getBoundingClientRect() returns 0 and the car flies off-screen.
+  requestAnimationFrame(() => {
+    renderUI();
+    positionCar(S.progress);
+    fetchWeather();
+    updateFromGPS();
+  });
   if (S.timer) clearInterval(S.timer);
   S.timer = setInterval(()=>{ updateFromGPS(); fetchWeather(); }, CONFIG.UPDATE_INTERVAL_MS);
 }
+
+// Reposition car whenever the window is resized or orientation changes
+window.addEventListener('resize', () => { if (S.progress >= 0) positionCar(S.progress); });
 
 function buildMarkers() {
   document.querySelectorAll('.milestone,.stop-marker').forEach(el=>el.remove());
