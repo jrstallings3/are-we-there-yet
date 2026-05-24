@@ -1071,22 +1071,43 @@ async function apiDirs(origin, dest, wpts = []) {
 
 async function cityAt(lat, lng) {
   await loadMaps();
-  const gc = new google.maps.Geocoder();
   return new Promise(resolve => {
-    gc.geocode({ location: { lat, lng } }, (results, st) => {
-      if (st !== 'OK' || !results?.length) { resolve(null); return; }
-      for (const r of results) {
-        if (r.types.includes('locality')) {
-          const c = r.address_components.find(x => x.types.includes('locality'));
-          if (c) { resolve(c.long_name); return; }
+    // Use Places nearbySearch ranked by prominence so major cities win over small suburbs
+    const dummy = document.createElement('div');
+    document.body.appendChild(dummy);
+    const svc = new google.maps.places.PlacesService(dummy);
+    svc.nearbySearch(
+      { location: new google.maps.LatLng(lat, lng), radius: 50000, types: ['locality'] },
+      (results, status) => {
+        document.body.removeChild(dummy);
+        if (status === google.maps.places.PlacesServiceStatus.OK && results?.length) {
+          resolve(results[0].name); return;
         }
+        // Fallback: reverse geocode, pick locality with largest bounding box
+        const gc = new google.maps.Geocoder();
+        gc.geocode({ location: { lat, lng } }, (res, st) => {
+          if (st !== 'OK' || !res?.length) { resolve(null); return; }
+          let best = null, bestArea = -1;
+          for (const r of res) {
+            if (r.types.includes('locality')) {
+              const c = r.address_components.find(x => x.types.includes('locality'));
+              if (c) {
+                const b = r.geometry?.bounds || r.geometry?.viewport;
+                const area = b ? (b.getNorthEast().lat() - b.getSouthWest().lat()) *
+                                  Math.abs(b.getNorthEast().lng() - b.getSouthWest().lng()) : 0;
+                if (area > bestArea) { bestArea = area; best = c.long_name; }
+              }
+            }
+          }
+          if (best) { resolve(best); return; }
+          for (const r of res) {
+            const c = r.address_components.find(x => x.types.includes('administrative_area_level_2'));
+            if (c) { resolve(c.short_name.replace(/ County| Parish/g, '')); return; }
+          }
+          resolve(null);
+        });
       }
-      for (const r of results) {
-        const c = r.address_components.find(x => x.types.includes('administrative_area_level_2'));
-        if (c) { resolve(c.short_name.replace(/ County| Parish/g, '')); return; }
-      }
-      resolve(null);
-    });
+    );
   });
 }
 
