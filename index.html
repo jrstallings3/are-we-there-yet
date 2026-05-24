@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Are We There Yet? 🚗</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', cursive;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    /* ── SETUP SCREEN ── */
+    #setup-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background: linear-gradient(180deg, #87CEEB 0%, #B8E4F9 55%, #5DBB63 55%, #4CAF50 100%);
+      padding: 20px;
+    }
+
+    .setup-title {
+      font-size: clamp(2rem, 6vw, 4rem);
+      color: #FF6B35;
+      text-shadow: 3px 3px 0 #FFD700, 6px 6px 0 rgba(0,0,0,.1);
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .setup-subtitle {
+      font-size: clamp(1rem, 2.5vw, 1.5rem);
+      color: #2E7D32;
+      margin-bottom: 28px;
+      text-align: center;
+    }
+
+    .setup-card {
+      background: white;
+      border-radius: 28px;
+      padding: 28px 36px;
+      box-shadow: 0 8px 30px rgba(0,0,0,.2);
+      width: min(92%, 480px);
+      border: 4px solid #FFD700;
+    }
+
+    .input-group { margin-bottom: 18px; }
+
+    .input-group label {
+      display: block;
+      font-size: 1.05rem;
+      color: #444;
+      margin-bottom: 7px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 11px 15px;
+      border: 3px solid #B8E4F9;
+      border-radius: 14px;
+      font-size: 1rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .input-group input:focus { border-color: #FF6B35; }
+
+    .go-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #FF6B35, #FF9558);
+      color: white;
+      border: none;
+      border-radius: 18px;
+      font-size: 1.45rem;
+      font-family: inherit;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(255,107,53,.4);
+      transition: transform .1s, box-shadow .1s;
+      text-shadow: 1px 1px 0 rgba(0,0,0,.2);
+    }
+    .go-btn:hover  { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255,107,53,.5); }
+    .go-btn:active { transform: translateY(1px); }
+
+    #setup-error {
+      color: #e53935;
+      font-size: .88rem;
+      margin-top: 10px;
+      text-align: center;
+      min-height: 1.2em;
+    }
+
+    /* ── MAIN SCREEN ── */
+    #main-screen {
+      display: none;
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(180deg, #87CEEB 0%, #C5E8FA 42%, #6CC24A 42%, #4CAF50 100%);
+    }
+
+    /* Sun */
+    .sun {
+      position: absolute;
+      top: 12px;
+      right: 80px;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      animation: sunSpin 25s linear infinite;
+      z-index: 3;
+      filter: drop-shadow(0 0 12px rgba(255,220,0,.6));
+    }
+    @keyframes sunSpin { to { transform: rotate(360deg); } }
+
+    /* Clouds */
+    .cloud {
+      position: absolute;
+      background: white;
+      border-radius: 50px;
+      opacity: .88;
+      z-index: 3;
+    }
+    .cloud::before, .cloud::after {
+      content: '';
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+    }
+    .cloud-a { width:120px; height:38px; top:6%;  left:-160px; animation: floatCloud 28s linear infinite; }
+    .cloud-a::before { width:58px;  height:52px; top:-28px; left:14px; }
+    .cloud-a::after  { width:44px;  height:44px; top:-24px; left:52px; }
+
+    .cloud-b { width:90px;  height:28px; top:14%; left:-130px; animation: floatCloud 42s linear infinite; animation-delay:-14s; }
+    .cloud-b::before { width:44px;  height:40px; top:-22px; left:10px; }
+    .cloud-b::after  { width:34px;  height:34px; top:-18px; left:38px; }
+
+    .cloud-c { width:70px;  height:22px; top:4%;  left:-110px; animation: floatCloud 34s linear infinite; animation-delay:-7s; }
+    .cloud-c::before { width:34px;  height:30px; top:-17px; left:8px;  }
+    .cloud-c::after  { width:26px;  height:26px; top:-14px; left:28px; }
+
+    @keyframes floatCloud {
+      from { transform: translateX(0); }
+      to   { transform: translateX(calc(100vw + 250px)); }
+    }
+
+    /* Header */
+    .header {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 16px;
+      z-index: 20;
+    }
+
+    .app-title {
+      font-size: clamp(1.1rem, 3vw, 2rem);
+      color: #FF6B35;
+      text-shadow: 2px 2px 0 #FFD700;
+    }
+
+    .stats-row { display: flex; gap: 10px; }
+
+    .stat {
+      background: rgba(255,255,255,.88);
+      border-radius: 14px;
+      padding: 6px 13px;
+      text-align: center;
+      border: 2px solid #FFD700;
+      min-width: 70px;
+    }
+    .stat-val {
+      display: block;
+      font-size: clamp(1.1rem, 2.5vw, 1.7rem);
+      color: #FF6B35;
+      line-height: 1.1;
+    }
+    .stat-lbl {
+      display: block;
+      font-size: clamp(.55rem, 1.2vw, .75rem);
+      color: #666;
+    }
+
+    /* Road strip */
+    .road {
+      position: absolute;
+      left: 0; right: 0;
+      /* Vertically centered a bit above midpoint */
+      top: 46%;
+      height: clamp(60px, 10vh, 90px);
+      background: #555;
+      z-index: 5;
+    }
+
+    /* Dashed centre line */
+    .road::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 0; right: 0;
+      height: 5px;
+      background: repeating-linear-gradient(
+        to right,
+        #FFD700 0 36px, transparent 36px 72px
+      );
+      transform: translateY(-50%);
+    }
+
+    /* Road kerb lines */
+    .road-top-edge, .road-bot-edge {
+      position: absolute;
+      left: 0; right: 0;
+      height: 5px;
+      background: white;
+    }
+    .road-top-edge { top: 0; }
+    .road-bot-edge { bottom: 0; }
+
+    /* Travelled section tint */
+    .road-done {
+      position: absolute;
+      left: var(--road-start);
+      top: 0;
+      height: 100%;
+      background: rgba(76,175,80,.25);
+      transition: width 1.4s ease;
+      z-index: 6;
+    }
+
+    /* Car */
+    .car {
+      position: absolute;
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      z-index: 12;
+      transition: left 1.4s cubic-bezier(.4,0,.2,1);
+      transform: translateX(-50%);
+      line-height: 1;
+      filter: drop-shadow(2px 3px 4px rgba(0,0,0,.3));
+    }
+
+    /* Milestone flags on the road */
+    .milestone {
+      position: absolute;
+      top: -38px;
+      transform: translateX(-50%);
+      z-index: 9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      pointer-events: none;
+    }
+    .milestone-icon { font-size: clamp(.9rem, 2vw, 1.3rem); }
+    .milestone-name {
+      background: rgba(255,255,255,.92);
+      border: 1px solid #ddd;
+      border-radius: 7px;
+      padding: 1px 5px;
+      font-size: clamp(.45rem, 1.1vw, .68rem);
+      color: #333;
+      white-space: nowrap;
+      margin-top: 1px;
+    }
+    .milestone-post {
+      width: 2px;
+      height: 12px;
+      background: #888;
+    }
+
+    /* Start / End labels below road */
+    .route-end {
+      position: absolute;
+      top: calc(46% + clamp(60px, 10vh, 90px) + 4px);
+      transform: translateX(-50%);
+      z-index: 8;
+      text-align: center;
+    }
+    .route-end-icon { font-size: clamp(1.2rem, 3vw, 1.8rem); }
+    .route-end-lbl {
+      display: block;
+      font-size: clamp(.5rem, 1.1vw, .68rem);
+      background: rgba(255,255,255,.88);
+      border-radius: 6px;
+      padding: 1px 4px;
+      white-space: nowrap;
+      max-width: 80px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: #333;
+    }
+
+    /* Hills behind road */
+    .hill {
+      position: absolute;
+      bottom: 0;
+      border-radius: 50% 50% 0 0;
+      z-index: 2;
+    }
+    .hill-1 { width:320px; height:130px; background:#43A047; left:-40px; }
+    .hill-2 { width:260px; height:110px; background:#388E3C; left:240px; }
+    .hill-3 { width:300px; height:140px; background:#4CAF50; right:100px; }
+    .hill-4 { width:200px; height: 90px; background:#2E7D32; right:-20px; }
+
+    /* Trees */
+    .tree {
+      position: absolute;
+      font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+      z-index: 4;
+    }
+
+    /* Snack meter */
+    .snack-bar {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255,255,255,.93);
+      border-radius: 18px;
+      padding: 7px 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 3px solid #FFD700;
+      box-shadow: 0 3px 12px rgba(0,0,0,.15);
+      z-index: 20;
+      white-space: nowrap;
+    }
+    .snack-lbl { font-size: clamp(.7rem, 1.7vw, .95rem); color: #555; }
+    .snack-track { display: flex; gap: 3px; }
+    .snack-item {
+      font-size: clamp(.9rem, 2.2vw, 1.3rem);
+      transition: opacity .5s, transform .5s;
+    }
+    .snack-item.eaten {
+      opacity: .15;
+      transform: scale(.7);
+    }
+    .snack-note {
+      font-size: clamp(.6rem, 1.3vw, .8rem);
+      color: #888;
+    }
+
+    /* Buttons */
+    .refresh-btn {
+      position: absolute;
+      bottom: 12px;
+      right: 14px;
+      background: #FF6B35;
+      color: white;
+      border: none;
+      border-radius: 14px;
+      padding: 9px 15px;
+      font-size: clamp(.7rem, 1.8vw, .95rem);
+      font-family: inherit;
+      cursor: pointer;
+      box-shadow: 0 3px 10px rgba(255,107,53,.3);
+      z-index: 20;
+      transition: transform .1s;
+    }
+    .refresh-btn:active { transform: scale(.95); }
+    .refresh-btn:disabled { opacity: .6; cursor: default; }
+
+    .new-trip-btn {
+      position: absolute;
+      bottom: 12px;
+      left: 14px;
+      background: #9C27B0;
+      color: white;
+      border: none;
+      border-radius: 14px;
+      padding: 9px 13px;
+      font-size: clamp(.65rem, 1.6vw, .85rem);
+      font-family: inherit;
+      cursor: pointer;
+      box-shadow: 0 3px 10px rgba(156,39,176,.3);
+      z-index: 20;
+    }
+
+    /* ── LOADING OVERLAY ── */
+    #loading {
+      position: fixed;
+      inset: 0;
+      background: rgba(255,255,255,.92);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+    #loading.show { display: flex; }
+    .loading-car { font-size: 4rem; animation: loadBounce .55s ease-in-out infinite alternate; }
+    .loading-msg  { font-size: clamp(1rem, 3vw, 1.5rem); color: #FF6B35; margin-top: 14px; }
+    @keyframes loadBounce {
+      from { transform: translateY(0) rotate(-5deg); }
+      to   { transform: translateY(-22px) rotate(5deg); }
+    }
+
+    /* ── ARRIVED OVERLAY ── */
+    #arrived-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(76,175,80,.93);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 90;
+      text-align: center;
+    }
+    #arrived-overlay.show { display: flex; }
+    .arrived-bang {
+      font-size: clamp(4rem, 14vw, 9rem);
+      animation: arrBounce 1s ease-in-out infinite;
+    }
+    .arrived-text {
+      font-size: clamp(2.5rem, 8vw, 5.5rem);
+      color: white;
+      text-shadow: 3px 3px 0 #2E7D32;
+      animation: popIn .5s cubic-bezier(.175,.885,.32,1.275);
+    }
+    .arrived-sub {
+      font-size: clamp(1rem, 3vw, 1.6rem);
+      color: #F1F8E9;
+      margin-top: 8px;
+    }
+    .arrived-newtrip {
+      margin-top: 24px;
+      background: white;
+      color: #2E7D32;
+      border: none;
+      border-radius: 18px;
+      padding: 12px 28px;
+      font-size: clamp(1rem, 2.5vw, 1.3rem);
+      font-family: inherit;
+      cursor: pointer;
+    }
+    @keyframes arrBounce {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-20px); }
+    }
+    @keyframes popIn {
+      from { transform: scale(0); }
+      to   { transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── LOADING ── -->
+<div id="loading">
+  <div class="loading-car">🚗</div>
+  <div class="loading-msg" id="loading-msg">Planning your adventure...</div>
+</div>
+
+<!-- ── ARRIVED ── -->
+<div id="arrived-overlay">
+  <div class="arrived-bang">🎉</div>
+  <div class="arrived-text">WE'RE HERE!</div>
+  <div class="arrived-sub">You made it! Amazing job! 🥳</div>
+  <button class="arrived-newtrip" onclick="newTrip()">✏️ Plan a New Trip</button>
+</div>
+
+<!-- ── SETUP SCREEN ── -->
+<div id="setup-screen">
+  <div class="setup-title">🚗 Are We There Yet? 🗺️</div>
+  <div class="setup-subtitle">Let's plan your awesome adventure!</div>
+  <div class="setup-card">
+    <div class="input-group">
+      <label>🏠 Where are we starting?</label>
+      <input type="text" id="origin-input" placeholder="e.g. Chicago, IL" />
+    </div>
+    <div class="input-group">
+      <label>🌟 Where are we going?</label>
+      <input type="text" id="dest-input" placeholder="e.g. Orlando, FL" />
+    </div>
+    <button class="go-btn" onclick="startTrip()">🚀 LET'S GO! 🚀</button>
+    <div id="setup-error"></div>
+  </div>
+</div>
+
+<!-- ── MAIN SCREEN ── -->
+<div id="main-screen">
+
+  <!-- Sky decoration -->
+  <div class="cloud cloud-a"></div>
+  <div class="cloud cloud-b"></div>
+  <div class="cloud cloud-c"></div>
+  <div class="sun">☀️</div>
+
+  <!-- Stats header -->
+  <div class="header">
+    <div class="app-title">🚗 Are We There Yet?</div>
+    <div class="stats-row">
+      <div class="stat">
+        <span class="stat-val" id="stat-miles">--</span>
+        <span class="stat-lbl">miles left</span>
+      </div>
+      <div class="stat">
+        <span class="stat-val" id="stat-eta">--</span>
+        <span class="stat-lbl">arrive</span>
+      </div>
+      <div class="stat">
+        <span class="stat-val" id="stat-pct">0%</span>
+        <span class="stat-lbl">done!</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hills -->
+  <div class="hill hill-1"></div>
+  <div class="hill hill-2"></div>
+  <div class="hill hill-3"></div>
+  <div class="hill hill-4"></div>
+
+  <!-- Trees (decorative) -->
+  <div class="tree" id="tree-area"></div>
+
+  <!-- Road -->
+  <div class="road" id="road">
+    <div class="road-top-edge"></div>
+    <div class="road-bot-edge"></div>
+    <div class="road-done" id="road-done"></div>
+  </div>
+
+  <!-- Car (sits on top of road) -->
+  <div class="car" id="car" style="left:5%">🚗</div>
+
+  <!-- Start / End markers (below road) -->
+  <div class="route-end" id="marker-start" style="left:5%">
+    <div class="route-end-icon">🏠</div>
+    <span class="route-end-lbl" id="lbl-start">Start</span>
+  </div>
+  <div class="route-end" id="marker-end" style="left:95%">
+    <div class="route-end-icon">⭐</div>
+    <span class="route-end-lbl" id="lbl-end">End</span>
+  </div>
+
+  <!-- Snack meter -->
+  <div class="snack-bar">
+    <span class="snack-lbl">🍪 Snacks left:</span>
+    <div class="snack-track" id="snack-track"></div>
+    <span class="snack-note" id="snack-note"></span>
+  </div>
+
+  <button class="refresh-btn" id="refresh-btn" onclick="manualRefresh()">🔄 Update!</button>
+  <button class="new-trip-btn" onclick="newTrip()">✏️ New Trip</button>
+
+</div><!-- /#main-screen -->
+
+<script>
+// ═══════════════════════════════════════════════════════
+//  CONFIG  —  replace with your Google Maps API key
+// ═══════════════════════════════════════════════════════
+const CONFIG = {
+  API_KEY: 'AIzaSyBDIUQ6_jcNtOX75HkezUdqsxsoYbsel18',
+  UPDATE_INTERVAL_MS: 5 * 60 * 1000,   // auto-refresh every 5 minutes
+  ROAD_START_PCT: 5,                    // % from left where road begins
+  ROAD_END_PCT:   95,                   // % from left where road ends
+  SNACKS: ['🍪','🍎','🥨','🍫','🧃','🍊','🥜','🍬','🍇','🍿'],
+  ARRIVED_WITHIN_M: 800,               // show arrived screen within 0.5 mi
+};
+
+// ═══════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════
+let S = {
+  origin: '',
+  destination: '',
+  totalDistM:   0,
+  totalDurS:    0,
+  remDistM:     0,
+  remDurS:      0,
+  milestones:   [],   // [{fraction, name}]
+  progress:     0,    // 0–1
+  timer:        null,
+};
+
+// ═══════════════════════════════════════════════════════
+//  POLYLINE HELPERS
+// ═══════════════════════════════════════════════════════
+function decodePolyline(enc) {
+  const pts = []; let idx = 0, lat = 0, lng = 0;
+  while (idx < enc.length) {
+    let b, shift = 0, res = 0;
+    do { b = enc.charCodeAt(idx++) - 63; res |= (b & 0x1f) << shift; shift += 5; } while (b >= 0x20);
+    lat += res & 1 ? ~(res >> 1) : res >> 1;
+    shift = res = 0;
+    do { b = enc.charCodeAt(idx++) - 63; res |= (b & 0x1f) << shift; shift += 5; } while (b >= 0x20);
+    lng += res & 1 ? ~(res >> 1) : res >> 1;
+    pts.push({ lat: lat / 1e5, lng: lng / 1e5 });
+  }
+  return pts;
+}
+
+function haversineM(la1, lo1, la2, lo2) {
+  const R = 6371000, d2r = Math.PI / 180;
+  const dLa = (la2 - la1) * d2r, dLo = (lo2 - lo1) * d2r;
+  const a = Math.sin(dLa/2)**2 + Math.cos(la1*d2r)*Math.cos(la2*d2r)*Math.sin(dLo/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+function polylineLen(pts) {
+  let t = 0;
+  for (let i = 1; i < pts.length; i++) t += haversineM(pts[i-1].lat, pts[i-1].lng, pts[i].lat, pts[i].lng);
+  return t;
+}
+
+function ptAtFraction(pts, f) {
+  const total = polylineLen(pts), target = total * f;
+  let cum = 0;
+  for (let i = 1; i < pts.length; i++) {
+    const seg = haversineM(pts[i-1].lat, pts[i-1].lng, pts[i].lat, pts[i].lng);
+    if (cum + seg >= target) {
+      const t = (target - cum) / seg;
+      return { lat: pts[i-1].lat + (pts[i].lat - pts[i-1].lat)*t, lng: pts[i-1].lng + (pts[i].lng - pts[i-1].lng)*t };
+    }
+    cum += seg;
+  }
+  return pts[pts.length - 1];
+}
+
+// ═══════════════════════════════════════════════════════
+//  API CALLS
+// ═══════════════════════════════════════════════════════
+async function apiDirections(origin, dest) {
+  const u = `https://maps.googleapis.com/maps/api/directions/json`
+    + `?origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(dest)}&key=${CONFIG.API_KEY}`;
+  const r = await fetch(u);
+  if (!r.ok) throw new Error('Network error fetching route');
+  const d = await r.json();
+  if (d.status !== 'OK') throw new Error(d.error_message || `Directions API: ${d.status}`);
+  return d;
+}
+
+async function apiReverseGeocode(lat, lng) {
+  const u = `https://maps.googleapis.com/maps/api/geocode/json`
+    + `?latlng=${lat},${lng}&result_type=locality|administrative_area_level_1&key=${CONFIG.API_KEY}`;
+  const r = await fetch(u);
+  const d = await r.json();
+  if (d.status !== 'OK' || !d.results.length) return null;
+  const comps = d.results[0].address_components;
+  const loc = comps.find(c => c.types.includes('locality'));
+  const adm = comps.find(c => c.types.includes('administrative_area_level_1'));
+  return (loc || adm)?.short_name || null;
+}
+
+// ═══════════════════════════════════════════════════════
+//  SETUP FLOW
+// ═══════════════════════════════════════════════════════
+async function startTrip() {
+  const origin = document.getElementById('origin-input').value.trim();
+  const dest   = document.getElementById('dest-input').value.trim();
+  const errEl  = document.getElementById('setup-error');
+  errEl.textContent = '';
+
+  if (!origin || !dest)                           return (errEl.textContent = 'Please fill in both boxes!');
+  if (CONFIG.API_KEY === 'YOUR_API_KEY_HERE')     return (errEl.textContent = '⚠️ Add your Google Maps API key in the CONFIG at the top of this file.');
+
+  showLoading('Planning your adventure...');
+  try {
+    const data  = await apiDirections(origin, dest);
+    const route = data.routes[0];
+    const leg   = route.legs[0];
+
+    S.origin      = origin;
+    S.destination = dest;
+    S.totalDistM  = leg.distance.value;
+    S.totalDurS   = leg.duration.value;
+    S.remDistM    = leg.distance.value;
+    S.remDurS     = leg.duration.value;
+    S.progress    = 0;
+
+    // Milestone cities at 25 / 50 / 75 %
+    const pts = decodePolyline(route.overview_polyline.encoded);
+    showLoading('Finding cities along the way...');
+    const fracs = [0.25, 0.5, 0.75];
+    S.milestones = await Promise.all(fracs.map(async f => {
+      const pt = ptAtFraction(pts, f);
+      const name = await apiReverseGeocode(pt.lat, pt.lng).catch(() => null);
+      return { fraction: f, name: name || `${Math.round(f*100)}% there!` };
+    }));
+
+    localStorage.setItem('awty', JSON.stringify({
+      origin, dest,
+      totalDistM: S.totalDistM,
+      totalDurS:  S.totalDurS,
+      milestones: S.milestones,
+      startedAt:  Date.now(),
+    }));
+
+    hideLoading();
+    launchMainScreen();
+  } catch (err) {
+    hideLoading();
+    errEl.textContent = `Oops! ${err.message}`;
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+//  MAIN SCREEN
+// ═══════════════════════════════════════════════════════
+function launchMainScreen() {
+  document.getElementById('setup-screen').style.display = 'none';
+  document.getElementById('main-screen').style.display = 'block';
+
+  // Labels
+  const clip = s => s.split(',')[0].slice(0, 13);
+  document.getElementById('lbl-start').textContent = clip(S.origin);
+  document.getElementById('lbl-end').textContent   = clip(S.destination);
+
+  buildMilestones();
+  buildSnackMeter();
+  renderUI();
+
+  // Position car above road
+  positionCar(S.progress);
+
+  // GPS + timer
+  updateFromGPS();
+  if (S.timer) clearInterval(S.timer);
+  S.timer = setInterval(updateFromGPS, CONFIG.UPDATE_INTERVAL_MS);
+}
+
+function buildMilestones() {
+  // Remove old
+  document.querySelectorAll('.milestone').forEach(el => el.remove());
+  const road = document.getElementById('road');
+  const span = CONFIG.ROAD_END_PCT - CONFIG.ROAD_START_PCT;
+
+  S.milestones.forEach(m => {
+    const leftPct = CONFIG.ROAD_START_PCT + m.fraction * span;
+    const el = document.createElement('div');
+    el.className = 'milestone';
+    el.style.left = `${leftPct}%`;
+    el.innerHTML = `
+      <div class="milestone-icon">🚩</div>
+      <div class="milestone-name">${m.name}</div>
+      <div class="milestone-post"></div>`;
+    road.appendChild(el);
+  });
+}
+
+function buildSnackMeter() {
+  const track = document.getElementById('snack-track');
+  track.innerHTML = CONFIG.SNACKS.map((s, i) =>
+    `<span class="snack-item" id="snack-${i}">${s}</span>`
+  ).join('');
+}
+
+// ═══════════════════════════════════════════════════════
+//  RENDER
+// ═══════════════════════════════════════════════════════
+function renderUI() {
+  const p    = Math.max(0, Math.min(1, S.progress));
+  const span = CONFIG.ROAD_END_PCT - CONFIG.ROAD_START_PCT;
+
+  // Car position
+  positionCar(p);
+
+  // Road progress tint
+  const done = document.getElementById('road-done');
+  done.style.setProperty('--road-start', `${CONFIG.ROAD_START_PCT}%`);
+  done.style.left  = `${CONFIG.ROAD_START_PCT}%`;
+  done.style.width = `${p * span}%`;
+
+  // Stats
+  const miles = S.remDistM / 1609.344;
+  document.getElementById('stat-miles').textContent = miles < 1 ? '<1' : Math.round(miles);
+
+  const eta = new Date(Date.now() + S.remDurS * 1000);
+  document.getElementById('stat-eta').textContent = fmtTime(eta);
+
+  document.getElementById('stat-pct').textContent = `${Math.round(p * 100)}%`;
+
+  // Snack meter — eaten count grows with progress
+  const eaten = Math.round(p * CONFIG.SNACKS.length);
+  CONFIG.SNACKS.forEach((_, i) => {
+    document.getElementById(`snack-${i}`)?.classList.toggle('eaten', i < eaten);
+  });
+
+  const left = CONFIG.SNACKS.length - eaten;
+  document.getElementById('snack-note').textContent =
+    left === 0 ? 'All gone! 😮' : left === CONFIG.SNACKS.length ? 'Trip just started!' : `${left} left 😋`;
+
+  // Arrived?
+  if (S.totalDistM > 0 && S.remDistM < CONFIG.ARRIVED_WITHIN_M) {
+    clearInterval(S.timer);
+    document.getElementById('arrived-overlay').classList.add('show');
+  }
+}
+
+function positionCar(progress) {
+  const span = CONFIG.ROAD_END_PCT - CONFIG.ROAD_START_PCT;
+  const leftPct = CONFIG.ROAD_START_PCT + progress * span;
+  const car   = document.getElementById('car');
+  const road  = document.getElementById('road');
+
+  // Vertically: sit on top of the road strip
+  const roadRect = road.getBoundingClientRect();
+  const carFontPx = parseFloat(getComputedStyle(car).fontSize);
+
+  car.style.left = `${leftPct}%`;
+  // Place car so its bottom aligns with top of road
+  car.style.top  = `${roadRect.top - carFontPx * 1.05}px`;
+}
+
+// ═══════════════════════════════════════════════════════
+//  GPS UPDATES
+// ═══════════════════════════════════════════════════════
+async function updateFromGPS() {
+  try {
+    const pos = await gpsPosition();
+    const data = await apiDirections(`${pos.coords.latitude},${pos.coords.longitude}`, S.destination);
+    const leg  = data.routes[0].legs[0];
+    S.remDistM = leg.distance.value;
+    S.remDurS  = leg.duration.value;
+    S.progress = Math.max(0, Math.min(1, 1 - S.remDistM / S.totalDistM));
+    renderUI();
+  } catch {
+    timeBasedFallback();
+  }
+}
+
+function timeBasedFallback() {
+  const saved = getSaved();
+  if (!saved) return;
+  const elapsed  = (Date.now() - saved.startedAt) / 1000;
+  S.progress     = Math.min(1, elapsed / S.totalDurS);
+  S.remDistM     = Math.max(0, S.totalDistM * (1 - S.progress));
+  S.remDurS      = Math.max(0, S.totalDurS  - elapsed);
+  renderUI();
+}
+
+function gpsPosition() {
+  return new Promise((res, rej) => {
+    if (!navigator.geolocation) return rej(new Error('No GPS'));
+    navigator.geolocation.getCurrentPosition(res, rej, { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 });
+  });
+}
+
+async function manualRefresh() {
+  const btn = document.getElementById('refresh-btn');
+  btn.disabled = true; btn.textContent = '⏳ Finding you...';
+  await updateFromGPS();
+  btn.disabled = false; btn.textContent = '🔄 Update!';
+}
+
+// ═══════════════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════════════
+function fmtTime(d) {
+  let h = d.getHours(), m = d.getMinutes().toString().padStart(2,'0');
+  const ap = h >= 12 ? 'PM' : 'AM';
+  h = h % 12 || 12;
+  return `${h}:${m} ${ap}`;
+}
+
+function showLoading(msg) {
+  document.getElementById('loading-msg').textContent = msg;
+  document.getElementById('loading').classList.add('show');
+}
+function hideLoading() {
+  document.getElementById('loading').classList.remove('show');
+}
+
+function newTrip() {
+  clearInterval(S.timer);
+  localStorage.removeItem('awty');
+  document.getElementById('arrived-overlay').classList.remove('show');
+  document.getElementById('main-screen').style.display = 'none';
+  document.getElementById('setup-screen').style.display = 'flex';
+  document.getElementById('origin-input').value = '';
+  document.getElementById('dest-input').value   = '';
+  document.getElementById('setup-error').textContent = '';
+}
+
+function getSaved() {
+  try { return JSON.parse(localStorage.getItem('awty') || 'null'); } catch { return null; }
+}
+
+// ═══════════════════════════════════════════════════════
+//  RESUME SAVED TRIP ON LOAD
+// ═══════════════════════════════════════════════════════
+(function init() {
+  const saved = getSaved();
+  if (!saved) return;
+
+  const ageH = (Date.now() - saved.startedAt) / 3.6e6;
+  if (ageH > 14) { localStorage.removeItem('awty'); return; }
+
+  S.origin      = saved.origin;
+  S.destination = saved.dest;
+  S.totalDistM  = saved.totalDistM;
+  S.totalDurS   = saved.totalDurS;
+  S.milestones  = saved.milestones || [];
+
+  // Estimate position from elapsed time until GPS kicks in
+  const elapsed = (Date.now() - saved.startedAt) / 1000;
+  S.progress    = Math.min(1, elapsed / S.totalDurS);
+  S.remDistM    = Math.max(0, S.totalDistM * (1 - S.progress));
+  S.remDurS     = Math.max(0, S.totalDurS  - elapsed);
+
+  launchMainScreen();
+})();
+</script>
+</body>
+</html>
