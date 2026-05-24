@@ -3,221 +3,579 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Are We There Yet? 🚗</title>
+  <title>Are We There Yet?</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    /* ── DESIGN TOKENS ── */
+    :root {
+      --sky:         #A8D8EA;
+      --sky-2:       #C8E9F5;
+      --grass:       #7BC67E;
+      --grass-2:     #5BA05E;
+      --road:        #888888;
+      --orange:      #F4874B;
+      --orange-2:    #FFAA72;
+      --yellow:      #FFD166;
+      --cream:       #FFFBF2;
+      --warm-white:  #FFF8EE;
+      --text-dark:   #3E2723;
+      --text-mid:    #6D4C41;
+      --tree:        #4E8A3C;
+      --hill-1:      #7BC67E;
+      --hill-2:      #5BA05E;
+      --hill-3:      #8FCF8A;
+      --shadow:      rgba(62,39,35,.10);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
     body {
-      font-family: 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', cursive;
+      font-family: 'Nunito', sans-serif;
       overflow: hidden;
       width: 100vw;
       height: 100vh;
+      background: var(--sky);
     }
 
-    /* ── SETUP SCREEN ── */
+    /* ══════════════════════════════
+       SETUP SCREEN
+    ══════════════════════════════ */
     #setup-screen {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100vh;
-      background: linear-gradient(180deg, #87CEEB 0%, #B8E4F9 55%, #5DBB63 55%, #4CAF50 100%);
+      background: linear-gradient(180deg, var(--sky) 0%, var(--sky-2) 52%, var(--grass) 52%, var(--grass-2) 100%);
       padding: 20px;
       overflow-y: auto;
     }
 
     .setup-title {
-      font-size: clamp(2rem, 6vw, 4rem);
-      color: #FF6B35;
-      text-shadow: 3px 3px 0 #FFD700, 6px 6px 0 rgba(0,0,0,.1);
-      margin-bottom: 8px;
+      font-size: clamp(1.8rem, 5.5vw, 3.6rem);
+      font-weight: 900;
+      color: var(--orange);
+      letter-spacing: -0.5px;
+      margin-bottom: 4px;
       text-align: center;
-      flex-shrink: 0;
+      filter: drop-shadow(0 3px 0 rgba(0,0,0,.08));
     }
-
-    .setup-subtitle {
-      font-size: clamp(1rem, 2.5vw, 1.5rem);
-      color: #2E7D32;
-      margin-bottom: 20px;
+    .setup-sub {
+      font-size: clamp(.9rem, 2.2vw, 1.3rem);
+      font-weight: 700;
+      color: var(--grass-2);
+      margin-bottom: 22px;
       text-align: center;
-      flex-shrink: 0;
     }
 
     .setup-card {
-      background: white;
+      background: var(--cream);
       border-radius: 28px;
-      padding: 24px 32px;
-      box-shadow: 0 8px 30px rgba(0,0,0,.2);
-      width: min(92%, 520px);
-      border: 4px solid #FFD700;
+      padding: 24px 28px;
+      width: min(94%, 500px);
+      box-shadow: 0 8px 32px var(--shadow), 0 2px 8px var(--shadow);
     }
 
-    .input-group { margin-bottom: 16px; }
-
-    .input-group label {
-      display: block;
-      font-size: 1rem;
-      color: #444;
+    .field-label {
+      font-size: .88rem;
+      font-weight: 800;
+      color: var(--text-mid);
+      text-transform: uppercase;
+      letter-spacing: .05em;
       margin-bottom: 6px;
+      display: block;
     }
+    .field-wrap { margin-bottom: 14px; }
 
-    .input-group input {
+    .field-input {
       width: 100%;
-      padding: 10px 14px;
-      border: 3px solid #B8E4F9;
-      border-radius: 14px;
-      font-size: 1rem;
-      font-family: inherit;
+      padding: 11px 16px;
+      border: 2.5px solid #E8DDD4;
+      border-radius: 16px;
+      font-size: .98rem;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 600;
+      color: var(--text-dark);
+      background: white;
       outline: none;
       transition: border-color .2s;
     }
-    .input-group input:focus { border-color: #FF6B35; }
+    .field-input:focus { border-color: var(--orange); }
+    .field-input::placeholder { color: #C4B5AC; font-weight: 600; }
 
-    /* Stops section */
-    .stops-section { margin-bottom: 16px; }
-
-    .stops-heading {
-      font-size: .95rem;
-      color: #555;
+    /* Stops */
+    .stops-head {
+      font-size: .82rem;
+      font-weight: 800;
+      color: var(--text-mid);
+      text-transform: uppercase;
+      letter-spacing: .05em;
       margin-bottom: 8px;
     }
-
     #stops-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
 
     .stop-row {
       display: flex;
       align-items: center;
       gap: 8px;
-      background: #FFF8E7;
-      border: 2px solid #FFD700;
+      background: #FFF4EA;
+      border: 2px solid #F5D9C8;
       border-radius: 14px;
-      padding: 8px 10px;
+      padding: 8px 12px;
     }
-
-    .stop-icon-select {
+    .stop-icon-sel {
       font-size: 1.1rem;
       border: none;
       background: transparent;
       cursor: pointer;
       outline: none;
       flex-shrink: 0;
-      padding: 2px;
     }
-
-    .stop-address-input {
+    .stop-addr-inp {
       flex: 1;
       border: none;
       background: transparent;
-      font-size: .92rem;
-      font-family: inherit;
+      font-size: .9rem;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 600;
+      color: var(--text-dark);
       outline: none;
-      color: #333;
       min-width: 0;
     }
-    .stop-address-input::placeholder { color: #aaa; }
-
-    .stop-remove-btn {
+    .stop-addr-inp::placeholder { color: #C4B5AC; }
+    .stop-rm-btn {
       background: none;
       border: none;
-      color: #e53935;
-      font-size: 1.1rem;
+      color: #D4907A;
+      font-size: 1rem;
       cursor: pointer;
       flex-shrink: 0;
       line-height: 1;
-      padding: 2px 4px;
+      padding: 0 4px;
     }
 
     .add-stop-btn {
-      background: none;
-      border: 2px dashed #FFD700;
-      border-radius: 12px;
-      color: #888;
-      font-size: .88rem;
-      font-family: inherit;
-      padding: 7px 14px;
-      cursor: pointer;
       width: 100%;
-      transition: background .2s, color .2s;
+      padding: 9px;
+      background: transparent;
+      border: 2.5px dashed #E0C8B8;
+      border-radius: 14px;
+      font-size: .88rem;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      color: var(--text-mid);
+      cursor: pointer;
+      margin-bottom: 14px;
+      transition: background .2s;
     }
-    .add-stop-btn:hover { background: #FFF8E7; color: #555; }
+    .add-stop-btn:hover { background: #FFF4EA; }
 
     .go-btn {
       width: 100%;
       padding: 14px;
-      background: linear-gradient(135deg, #FF6B35, #FF9558);
+      background: var(--orange);
       color: white;
       border: none;
-      border-radius: 18px;
-      font-size: 1.45rem;
-      font-family: inherit;
+      border-radius: 20px;
+      font-size: 1.35rem;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
       cursor: pointer;
-      box-shadow: 0 4px 15px rgba(255,107,53,.4);
+      box-shadow: 0 4px 0 #C96830, 0 6px 16px rgba(244,135,75,.35);
       transition: transform .1s, box-shadow .1s;
-      text-shadow: 1px 1px 0 rgba(0,0,0,.2);
-      margin-top: 4px;
+      letter-spacing: .01em;
     }
-    .go-btn:hover  { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255,107,53,.5); }
-    .go-btn:active { transform: translateY(1px); }
+    .go-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #C96830, 0 3px 10px rgba(244,135,75,.3); }
 
     #setup-error {
-      color: #e53935;
-      font-size: .88rem;
+      color: #D44;
+      font-size: .85rem;
+      font-weight: 700;
       margin-top: 10px;
       text-align: center;
-      min-height: 1.2em;
+      min-height: 1.1em;
     }
 
-    /* ── MAIN SCREEN ── */
+    /* ══════════════════════════════
+       MAIN SCENE
+    ══════════════════════════════ */
     #main-screen {
       display: none;
       width: 100vw;
       height: 100vh;
       position: relative;
       overflow: hidden;
-      background: linear-gradient(180deg, #87CEEB 0%, #C5E8FA 42%, #6CC24A 42%, #4CAF50 100%);
     }
 
-    /* Sun */
-    .sun {
+    /* Sky + ground layers (weather JS overrides these) */
+    #sky-layer {
       position: absolute;
-      top: 12px;
-      right: 80px;
-      font-size: clamp(2rem, 5vw, 3.2rem);
-      animation: sunSpin 25s linear infinite;
-      z-index: 3;
-      filter: drop-shadow(0 0 12px rgba(255,220,0,.6));
+      inset: 0;
+      background: linear-gradient(180deg, var(--sky) 0%, var(--sky-2) 48%, var(--grass) 48%, var(--grass-2) 100%);
+      transition: background 2s ease;
+      z-index: 0;
     }
-    @keyframes sunSpin { to { transform: rotate(360deg); } }
 
-    /* Clouds */
+    /* Fog overlay */
+    #fog-overlay {
+      position: absolute; inset: 0;
+      background: rgba(220,230,235,.0);
+      z-index: 1;
+      pointer-events: none;
+      transition: background 2s;
+    }
+
+    /* Stars (night) */
+    #star-field {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 48%;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Lightning flash */
+    #lightning {
+      position: absolute; inset: 0;
+      background: rgba(240,255,255,0);
+      z-index: 4;
+      pointer-events: none;
+      transition: background .05s;
+    }
+
+    /* Weather particles */
+    #weather-overlay {
+      position: absolute; inset: 0;
+      z-index: 3;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .raindrop {
+      position: absolute;
+      width: 2px;
+      background: linear-gradient(180deg, transparent, rgba(160,200,220,.7));
+      border-radius: 2px;
+      animation: rainFall linear infinite;
+    }
+    @keyframes rainFall {
+      from { transform: translateY(-20px) rotate(12deg); opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 1; }
+      to   { transform: translateY(105vh) rotate(12deg); opacity: 0; }
+    }
+    .snowflake {
+      position: absolute;
+      color: white;
+      opacity: 0;
+      animation: snowFall linear infinite;
+      user-select: none;
+    }
+    @keyframes snowFall {
+      from { transform: translateY(-30px) translateX(0); opacity: 0; }
+      10%  { opacity: .9; }
+      90%  { opacity: .9; }
+      to   { transform: translateY(105vh) translateX(30px); opacity: 0; }
+    }
+
+    /* ── SUN ── */
+    #sun {
+      position: absolute;
+      top: 5%;
+      right: 8%;
+      width: clamp(44px, 9vw, 72px);
+      height: clamp(44px, 9vw, 72px);
+      z-index: 5;
+      cursor: pointer;
+      user-select: none;
+    }
+    .sun-rays {
+      position: absolute; inset: -40%;
+      background: radial-gradient(circle, rgba(255,220,80,.35) 30%, transparent 70%);
+      border-radius: 50%;
+      animation: pulseSun 3s ease-in-out infinite;
+    }
+    .sun-circle {
+      position: absolute; inset: 0;
+      background: radial-gradient(circle at 40% 35%, #FFE066, #FFBB33);
+      border-radius: 50%;
+      box-shadow: 0 0 0 4px rgba(255,210,50,.25);
+    }
+    @keyframes pulseSun { 0%,100% { opacity:.7; transform:scale(1); } 50% { opacity:1; transform:scale(1.12); } }
+    #sun.burst .sun-circle { animation: sunBurst .6s ease-out; }
+    @keyframes sunBurst {
+      0%  { transform:scale(1);   box-shadow:0 0 0 4px rgba(255,210,50,.25); }
+      50% { transform:scale(1.25);box-shadow:0 0 0 20px rgba(255,210,50,.0); }
+      100%{ transform:scale(1);   box-shadow:0 0 0 4px rgba(255,210,50,.25); }
+    }
+
+    /* ── MOON ── */
+    #moon {
+      display: none;
+      position: absolute;
+      top: 6%; right: 9%;
+      width: clamp(36px, 7vw, 56px);
+      height: clamp(36px, 7vw, 56px);
+      background: radial-gradient(circle at 35% 35%, #FFFDE0, #F0D080);
+      border-radius: 50%;
+      box-shadow: inset -6px -3px 0 rgba(0,0,0,.08), 0 0 20px rgba(255,240,120,.4);
+      z-index: 5;
+    }
+
+    /* ── CLOUDS ── */
     .cloud {
       position: absolute;
+      cursor: pointer;
+      user-select: none;
+      z-index: 5;
+    }
+    .cloud-body {
       background: white;
       border-radius: 50px;
-      opacity: .88;
-      z-index: 3;
+      box-shadow: 0 3px 8px rgba(0,0,0,.06);
+      position: relative;
     }
-    .cloud::before, .cloud::after {
+    .cloud-body::before, .cloud-body::after {
       content: '';
       position: absolute;
       background: white;
       border-radius: 50%;
     }
-    .cloud-a { width:120px; height:38px; top:6%;  left:-160px; animation: floatCloud 28s linear infinite; }
-    .cloud-a::before { width:58px;  height:52px; top:-28px; left:14px; }
-    .cloud-a::after  { width:44px;  height:44px; top:-24px; left:52px; }
-    .cloud-b { width:90px;  height:28px; top:14%; left:-130px; animation: floatCloud 42s linear infinite; animation-delay:-14s; }
-    .cloud-b::before { width:44px;  height:40px; top:-22px; left:10px; }
-    .cloud-b::after  { width:34px;  height:34px; top:-18px; left:38px; }
-    .cloud-c { width:70px;  height:22px; top:4%;  left:-110px; animation: floatCloud 34s linear infinite; animation-delay:-7s; }
-    .cloud-c::before { width:34px;  height:30px; top:-17px; left:8px;  }
-    .cloud-c::after  { width:26px;  height:26px; top:-14px; left:28px; }
-    @keyframes floatCloud {
-      from { transform: translateX(0); }
-      to   { transform: translateX(calc(100vw + 250px)); }
+
+    .cloud-a { top: 7%;  animation: driftCloud 35s linear infinite; }
+    .cloud-a .cloud-body { width:110px; height:34px; }
+    .cloud-a .cloud-body::before { width:52px; height:46px; top:-26px; left:12px; }
+    .cloud-a .cloud-body::after  { width:40px; height:38px; top:-21px; left:50px; }
+
+    .cloud-b { top: 15%; animation: driftCloud 48s linear infinite; animation-delay:-18s; }
+    .cloud-b .cloud-body { width:80px;  height:26px; }
+    .cloud-b .cloud-body::before { width:38px; height:36px; top:-20px; left:8px; }
+    .cloud-b .cloud-body::after  { width:30px; height:30px; top:-17px; left:36px; }
+
+    .cloud-c { top: 4%;  animation: driftCloud 40s linear infinite; animation-delay:-9s; }
+    .cloud-c .cloud-body { width:60px;  height:20px; }
+    .cloud-c .cloud-body::before { width:28px; height:26px; top:-14px; left:6px; }
+    .cloud-c .cloud-body::after  { width:22px; height:22px; top:-12px; left:26px; }
+
+    .cloud-d { top: 11%; animation: driftCloud 55s linear infinite; animation-delay:-30s; }
+    .cloud-d .cloud-body { width:95px;  height:30px; }
+    .cloud-d .cloud-body::before { width:44px; height:42px; top:-23px; left:10px; }
+    .cloud-d .cloud-body::after  { width:36px; height:35px; top:-19px; left:44px; }
+
+    @keyframes driftCloud {
+      from { transform: translateX(-200px); }
+      to   { transform: translateX(calc(100vw + 200px)); }
     }
 
-    /* Header */
+    .cloud.pop .cloud-body { animation: cloudPop .45s ease-out; }
+    @keyframes cloudPop {
+      0%   { transform: scale(1)    rotate(0deg); }
+      30%  { transform: scale(1.18) rotate(-6deg); }
+      60%  { transform: scale(.93)  rotate(4deg); }
+      100% { transform: scale(1)    rotate(0deg); }
+    }
+
+    /* ── HILLS / TREES ── */
+    .hill {
+      position: absolute;
+      bottom: 0;
+      border-radius: 50% 50% 0 0;
+      z-index: 2;
+    }
+    .h1 { width:340px; height:120px; background:var(--hill-2); left:-30px; }
+    .h2 { width:280px; height:100px; background:var(--hill-3); left:180px; }
+    .h3 { width:320px; height:130px; background:var(--hill-1); right:60px; }
+    .h4 { width:200px; height: 80px; background:var(--hill-2); right:-10px; }
+
+    .scene-tree {
+      position: absolute;
+      z-index: 4;
+      cursor: pointer;
+      user-select: none;
+      font-size: clamp(1.6rem, 4vw, 2.6rem);
+      transition: transform .15s;
+    }
+    .scene-tree:active { transform: scale(.88); }
+    .scene-tree.wobble { animation: treeWobble .5s ease-out; }
+    @keyframes treeWobble {
+      0%,100% { transform: rotate(0deg); }
+      20%     { transform: rotate(-8deg) scale(1.05); }
+      60%     { transform: rotate(6deg)  scale(1.05); }
+    }
+
+    /* ── ANIMALS ── */
+    .animal {
+      position: absolute;
+      font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+      z-index: 6;
+      cursor: pointer;
+      user-select: none;
+      transition: transform .15s;
+    }
+    .animal.dance { animation: animalDance .55s ease-out; }
+    @keyframes animalDance {
+      0%,100% { transform: translateY(0)    rotate(0deg)   scale(1);    }
+      30%     { transform: translateY(-14px) rotate(-14deg) scale(1.25); }
+      65%     { transform: translateY(-8px)  rotate(10deg)  scale(1.2);  }
+    }
+
+    /* ── ROAD ── */
+    .road {
+      position: absolute;
+      left: 0; right: 0;
+      top: 46%;
+      height: clamp(58px, 9.5vh, 84px);
+      background: var(--road);
+      z-index: 5;
+    }
+    .road::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 0; right: 0;
+      height: 4px;
+      background: repeating-linear-gradient(to right, var(--yellow) 0 34px, transparent 34px 68px);
+      transform: translateY(-50%);
+    }
+    .road-edge { position: absolute; left: 0; right: 0; height: 4px; background: #C8B89A; }
+    .road-edge.top { top: 0; }
+    .road-edge.bot { bottom: 0; }
+    .road-done {
+      position: absolute; top: 0; height: 100%;
+      background: rgba(123,198,126,.22);
+      transition: width 1.4s ease;
+      z-index: 6;
+    }
+
+    /* ── CAR ── */
+    #car-wrap {
+      position: absolute;
+      z-index: 12;
+      transition: left 1.4s cubic-bezier(.4,0,.2,1);
+      transform: translateX(-50%);
+      cursor: pointer;
+      user-select: none;
+    }
+    #car-wrap .car-svg {
+      display: block;
+      width: clamp(100px, 18vw, 180px);
+      height: auto;
+      filter: drop-shadow(2px 4px 6px rgba(0,0,0,.18));
+    }
+    #car-wrap.honk  { animation: carHonk .35s ease-out; }
+    @keyframes carHonk {
+      0%,100% { transform: translateX(-50%) translateY(0); }
+      40%     { transform: translateX(-50%) translateY(-8px); }
+    }
+
+    /* Speech bubble */
+    #honk-bubble {
+      position: absolute;
+      top: -38px;
+      left: 50%;
+      transform: translateX(-30%);
+      background: white;
+      border: 2.5px solid var(--orange);
+      border-radius: 14px;
+      padding: 5px 10px;
+      font-size: clamp(.7rem, 1.6vw, .9rem);
+      font-weight: 800;
+      color: var(--orange);
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity .2s;
+      pointer-events: none;
+      z-index: 14;
+    }
+    #honk-bubble::after {
+      content: '';
+      position: absolute;
+      bottom: -8px; left: 18px;
+      border: 8px solid transparent;
+      border-top-color: var(--orange);
+      border-bottom: none;
+    }
+    #honk-bubble.show { opacity: 1; }
+
+    /* ── MILESTONE FLAGS ── */
+    .milestone {
+      position: absolute;
+      top: -44px;
+      transform: translateX(-50%);
+      z-index: 9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      pointer-events: none;
+    }
+    .milestone-flag { font-size: clamp(.8rem, 1.7vw, 1.1rem); }
+    .milestone-name {
+      background: var(--cream);
+      border-radius: 8px;
+      padding: 2px 6px;
+      font-size: clamp(.4rem, .95vw, .62rem);
+      font-weight: 700;
+      color: var(--text-dark);
+      white-space: nowrap;
+      box-shadow: 0 1px 4px var(--shadow);
+      margin-top: 1px;
+    }
+    .milestone-post { width: 2px; height: 14px; background: #B0A898; }
+
+    /* ── STOP MARKERS ── */
+    .stop-marker {
+      position: absolute;
+      top: calc(clamp(58px, 9.5vh, 84px) + 5px);
+      transform: translateX(-50%);
+      z-index: 9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      pointer-events: none;
+    }
+    .stop-marker-post { width: 2px; height: 12px; background: var(--orange); }
+    .stop-marker-pill {
+      background: var(--orange);
+      border-radius: 12px;
+      padding: 2px 7px;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      box-shadow: 0 2px 8px rgba(244,135,75,.3);
+    }
+    .stop-marker-emoji { font-size: clamp(.65rem, 1.5vw, .9rem); }
+    .stop-marker-lbl {
+      font-size: clamp(.36rem, .85vw, .55rem);
+      font-weight: 800;
+      color: white;
+      white-space: nowrap;
+      max-width: 58px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ── ROUTE ENDS ── */
+    .route-end {
+      position: absolute;
+      top: calc(46% + clamp(58px, 9.5vh, 84px) + 4px);
+      transform: translateX(-50%);
+      z-index: 8;
+      text-align: center;
+    }
+    .route-end-icon { font-size: clamp(1.1rem, 2.6vw, 1.7rem); }
+    .route-end-lbl {
+      display: block;
+      font-size: clamp(.45rem, 1vw, .62rem);
+      font-weight: 700;
+      background: rgba(255,251,242,.88);
+      border-radius: 6px;
+      padding: 1px 4px;
+      white-space: nowrap;
+      max-width: 78px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: var(--text-dark);
+    }
+
+    /* ── HEADER ── */
     .header {
       position: absolute;
       top: 0; left: 0; right: 0;
@@ -227,430 +585,349 @@
       padding: 10px 16px;
       z-index: 20;
     }
-
     .app-title {
-      font-size: clamp(1.1rem, 3vw, 2rem);
-      color: #FF6B35;
-      text-shadow: 2px 2px 0 #FFD700;
+      font-size: clamp(1rem, 2.8vw, 1.8rem);
+      font-weight: 900;
+      color: var(--orange);
+      letter-spacing: -.02em;
+      filter: drop-shadow(0 1px 0 rgba(0,0,0,.08));
     }
-
-    .stats-row { display: flex; gap: 10px; }
-
+    .stats-row { display: flex; gap: 8px; }
     .stat {
-      background: rgba(255,255,255,.88);
+      background: rgba(255,251,242,.9);
       border-radius: 14px;
-      padding: 6px 13px;
+      padding: 5px 12px;
       text-align: center;
-      border: 2px solid #FFD700;
-      min-width: 70px;
+      box-shadow: 0 2px 8px var(--shadow);
+      min-width: 64px;
     }
     .stat-val {
       display: block;
-      font-size: clamp(1.1rem, 2.5vw, 1.7rem);
-      color: #FF6B35;
+      font-size: clamp(1rem, 2.3vw, 1.55rem);
+      font-weight: 900;
+      color: var(--orange);
       line-height: 1.1;
     }
     .stat-lbl {
       display: block;
-      font-size: clamp(.55rem, 1.2vw, .75rem);
-      color: #666;
-    }
-
-    /* Road strip */
-    .road {
-      position: absolute;
-      left: 0; right: 0;
-      top: 46%;
-      height: clamp(60px, 10vh, 90px);
-      background: #555;
-      z-index: 5;
-    }
-    .road::before {
-      content: '';
-      position: absolute;
-      top: 50%; left: 0; right: 0;
-      height: 5px;
-      background: repeating-linear-gradient(to right, #FFD700 0 36px, transparent 36px 72px);
-      transform: translateY(-50%);
-    }
-    .road-top-edge, .road-bot-edge {
-      position: absolute; left: 0; right: 0; height: 5px; background: white;
-    }
-    .road-top-edge { top: 0; }
-    .road-bot-edge { bottom: 0; }
-    .road-done {
-      position: absolute;
-      top: 0; height: 100%;
-      background: rgba(76,175,80,.25);
-      transition: width 1.4s ease;
-      z-index: 6;
-    }
-
-    /* Car */
-    .car {
-      position: absolute;
-      font-size: clamp(2rem, 5vw, 3.4rem);
-      z-index: 12;
-      transition: left 1.4s cubic-bezier(.4,0,.2,1);
-      transform: translateX(-50%);
-      line-height: 1;
-      filter: drop-shadow(2px 3px 4px rgba(0,0,0,.3));
-    }
-
-    /* City milestone flags — above road */
-    .milestone {
-      position: absolute;
-      top: -42px;
-      transform: translateX(-50%);
-      z-index: 9;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      pointer-events: none;
-    }
-    .milestone-icon { font-size: clamp(.85rem, 1.8vw, 1.15rem); }
-    .milestone-name {
-      background: rgba(255,255,255,.92);
-      border: 1px solid #ddd;
-      border-radius: 7px;
-      padding: 1px 5px;
-      font-size: clamp(.42rem, 1vw, .64rem);
-      color: #333;
-      white-space: nowrap;
-      margin-top: 1px;
-    }
-    .milestone-post { width: 2px; height: 14px; background: #888; }
-
-    /* Custom stop markers — below road */
-    .stop-marker {
-      position: absolute;
-      top: calc(clamp(60px, 10vh, 90px) + 6px);
-      transform: translateX(-50%);
-      z-index: 9;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      pointer-events: none;
-    }
-    .stop-marker-post { width: 2px; height: 14px; background: #FF6B35; }
-    .stop-marker-bubble {
-      background: #FF6B35;
-      border-radius: 12px;
-      padding: 2px 7px;
-      display: flex;
-      align-items: center;
-      gap: 3px;
-      box-shadow: 0 2px 6px rgba(0,0,0,.2);
-    }
-    .stop-marker-emoji { font-size: clamp(.7rem, 1.6vw, 1rem); }
-    .stop-marker-name {
-      font-size: clamp(.38rem, .9vw, .58rem);
-      color: white;
-      white-space: nowrap;
-      max-width: 60px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    /* Start / End labels below road */
-    .route-end {
-      position: absolute;
-      top: calc(46% + clamp(60px, 10vh, 90px) + 4px);
-      transform: translateX(-50%);
-      z-index: 8;
-      text-align: center;
-    }
-    .route-end-icon { font-size: clamp(1.2rem, 3vw, 1.8rem); }
-    .route-end-lbl {
-      display: block;
       font-size: clamp(.5rem, 1.1vw, .68rem);
-      background: rgba(255,255,255,.88);
-      border-radius: 6px;
-      padding: 1px 4px;
-      white-space: nowrap;
-      max-width: 80px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      color: #333;
+      font-weight: 700;
+      color: var(--text-mid);
     }
 
-    /* Hills */
-    .hill { position: absolute; bottom: 0; border-radius: 50% 50% 0 0; z-index: 2; }
-    .hill-1 { width:320px; height:130px; background:#43A047; left:-40px; }
-    .hill-2 { width:260px; height:110px; background:#388E3C; left:240px; }
-    .hill-3 { width:300px; height:140px; background:#4CAF50; right:100px; }
-    .hill-4 { width:200px; height: 90px; background:#2E7D32; right:-20px; }
+    /* ── WEATHER BADGE ── */
+    #weather-badge {
+      position: absolute;
+      top: 10px; left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255,251,242,.88);
+      border-radius: 12px;
+      padding: 3px 10px;
+      font-size: clamp(.55rem, 1.3vw, .75rem);
+      font-weight: 700;
+      color: var(--text-mid);
+      box-shadow: 0 2px 8px var(--shadow);
+      z-index: 20;
+      white-space: nowrap;
+      display: none;
+    }
 
-    /* Snack meter */
+    /* ── SNACK BAR ── */
     .snack-bar {
       position: absolute;
       bottom: 12px; left: 50%;
       transform: translateX(-50%);
-      background: rgba(255,255,255,.93);
-      border-radius: 18px;
+      background: rgba(255,251,242,.93);
+      border-radius: 20px;
       padding: 7px 18px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      border: 3px solid #FFD700;
-      box-shadow: 0 3px 12px rgba(0,0,0,.15);
+      display: flex; align-items: center; gap: 10px;
+      box-shadow: 0 3px 14px var(--shadow);
       z-index: 20;
       white-space: nowrap;
     }
-    .snack-lbl   { font-size: clamp(.7rem, 1.7vw, .95rem); color: #555; }
-    .snack-track { display: flex; gap: 3px; }
-    .snack-item  { font-size: clamp(.9rem, 2.2vw, 1.3rem); transition: opacity .5s, transform .5s; }
+    .snack-lbl  { font-size: clamp(.68rem, 1.6vw, .9rem); font-weight: 700; color: var(--text-mid); }
+    .snack-track{ display: flex; gap: 3px; }
+    .snack-item { font-size: clamp(.9rem, 2vw, 1.25rem); transition: opacity .5s, transform .5s; }
     .snack-item.eaten { opacity: .15; transform: scale(.7); }
-    .snack-note  { font-size: clamp(.6rem, 1.3vw, .8rem); color: #888; }
+    .snack-note { font-size: clamp(.58rem, 1.2vw, .75rem); font-weight: 700; color: #B0A898; }
 
-    /* Bottom buttons */
-    .refresh-btn {
-      position: absolute; bottom: 12px; right: 14px;
-      background: #FF6B35; color: white; border: none;
-      border-radius: 14px; padding: 9px 15px;
-      font-size: clamp(.7rem, 1.8vw, .95rem); font-family: inherit;
-      cursor: pointer; box-shadow: 0 3px 10px rgba(255,107,53,.3);
-      z-index: 20; transition: transform .1s;
+    /* ── BUTTONS ── */
+    .btn-pill {
+      position: absolute;
+      border: none;
+      border-radius: 14px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      cursor: pointer;
+      z-index: 20;
+      white-space: nowrap;
+      transition: transform .1s;
+      font-size: clamp(.65rem, 1.6vw, .88rem);
     }
-    .refresh-btn:active  { transform: scale(.95); }
-    .refresh-btn:disabled { opacity: .6; cursor: default; }
+    .btn-pill:active { transform: scale(.94); }
 
-    .new-trip-btn {
-      position: absolute; bottom: 12px; left: 14px;
-      background: #9C27B0; color: white; border: none;
-      border-radius: 14px; padding: 9px 13px;
-      font-size: clamp(.65rem, 1.6vw, .85rem); font-family: inherit;
-      cursor: pointer; box-shadow: 0 3px 10px rgba(156,39,176,.3); z-index: 20;
-    }
-
-    .add-stop-trip-btn {
-      position: absolute; bottom: 52px; right: 14px;
-      background: #FF9800; color: white; border: none;
-      border-radius: 14px; padding: 9px 13px;
-      font-size: clamp(.65rem, 1.6vw, .85rem); font-family: inherit;
-      cursor: pointer; box-shadow: 0 3px 10px rgba(255,152,0,.3); z-index: 20;
-    }
+    #refresh-btn  { bottom:12px; right:14px; background:var(--orange); color:white; padding:9px 14px; box-shadow:0 3px 0 #C96830; }
+    #refresh-btn:disabled { opacity:.6; cursor:default; }
+    #add-stop-btn { bottom:52px; right:14px; background:#F4C261; color:var(--text-dark); padding:9px 13px; box-shadow:0 3px 0 #C89830; }
+    #new-trip-btn { bottom:12px; left:14px;  background:#A8D8EA; color:var(--text-dark); padding:9px 13px; box-shadow:0 3px 0 #78A8BA; }
 
     /* ── ADD STOP MODAL ── */
-    #stop-modal-overlay {
+    #modal-overlay {
       position: fixed; inset: 0;
-      background: rgba(0,0,0,.45);
-      display: none;
-      align-items: center;
-      justify-content: center;
+      background: rgba(62,39,35,.35);
+      display: none; align-items: center; justify-content: center;
       z-index: 80;
+      backdrop-filter: blur(3px);
     }
-    #stop-modal-overlay.show { display: flex; }
-
-    .stop-modal {
-      background: white;
-      border-radius: 24px;
-      padding: 28px 32px;
-      width: min(88%, 380px);
-      border: 4px solid #FF9800;
-      box-shadow: 0 8px 30px rgba(0,0,0,.3);
+    #modal-overlay.show { display: flex; }
+    .modal-card {
+      background: var(--cream);
+      border-radius: 26px;
+      padding: 26px 28px;
+      width: min(90%, 360px);
+      box-shadow: 0 12px 40px rgba(62,39,35,.22);
     }
-    .stop-modal h3 {
-      font-size: 1.3rem;
-      color: #FF6B35;
-      margin-bottom: 16px;
-      text-align: center;
-    }
-    .modal-icon-row {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-    .modal-icon-btn {
-      font-size: 1.6rem;
-      background: #f5f5f5;
-      border: 3px solid transparent;
+    .modal-title { font-size: 1.2rem; font-weight: 900; color: var(--orange); text-align: center; margin-bottom: 14px; }
+    .modal-icons { display: flex; justify-content: center; gap: 8px; margin-bottom: 14px; }
+    .mi-btn {
+      font-size: 1.5rem;
+      background: #F5EEE6;
+      border: 2.5px solid transparent;
       border-radius: 12px;
-      padding: 6px 10px;
+      padding: 5px 9px;
       cursor: pointer;
       transition: border-color .15s, background .15s;
     }
-    .modal-icon-btn.selected {
-      border-color: #FF9800;
-      background: #FFF3E0;
-    }
-    .modal-addr-input {
+    .mi-btn.sel { border-color: var(--orange); background: #FFF0E5; }
+    .modal-input {
       width: 100%;
       padding: 10px 14px;
-      border: 3px solid #B8E4F9;
-      border-radius: 14px;
-      font-size: 1rem;
-      font-family: inherit;
-      outline: none;
-      margin-bottom: 14px;
-    }
-    .modal-addr-input:focus { border-color: #FF9800; }
-    .modal-label-input {
-      width: 100%;
-      padding: 9px 14px;
-      border: 3px solid #B8E4F9;
+      border: 2.5px solid #E8DDD4;
       border-radius: 14px;
       font-size: .95rem;
-      font-family: inherit;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 600;
+      color: var(--text-dark);
+      background: white;
       outline: none;
-      margin-bottom: 16px;
+      margin-bottom: 10px;
     }
-    .modal-label-input:focus { border-color: #FF9800; }
-    .modal-btns { display: flex; gap: 10px; }
-    .modal-confirm-btn {
-      flex: 1; padding: 11px;
-      background: #FF9800; color: white; border: none;
-      border-radius: 14px; font-size: 1rem; font-family: inherit;
-      cursor: pointer;
-    }
-    .modal-cancel-btn {
-      flex: 1; padding: 11px;
-      background: #eee; color: #555; border: none;
-      border-radius: 14px; font-size: 1rem; font-family: inherit;
-      cursor: pointer;
-    }
-    #modal-error {
-      color: #e53935; font-size: .82rem;
-      text-align: center; margin-bottom: 10px; min-height: 1em;
-    }
+    .modal-input:focus { border-color: var(--orange); }
+    #modal-err { color: #D44; font-size: .82rem; font-weight: 700; text-align: center; margin-bottom: 8px; min-height: 1em; }
+    .modal-row { display: flex; gap: 8px; }
+    .modal-ok  { flex:1; padding:11px; background:var(--orange); color:white; border:none; border-radius:14px; font-size:.95rem; font-family:'Nunito',sans-serif; font-weight:800; cursor:pointer; }
+    .modal-cancel { flex:1; padding:11px; background:#EDE6DE; color:var(--text-mid); border:none; border-radius:14px; font-size:.95rem; font-family:'Nunito',sans-serif; font-weight:800; cursor:pointer; }
 
-    /* ── LOADING OVERLAY ── */
+    /* ── LOADING ── */
     #loading {
       position: fixed; inset: 0;
-      background: rgba(255,255,255,.92);
+      background: rgba(255,251,242,.94);
       display: none; flex-direction: column;
       align-items: center; justify-content: center; z-index: 100;
     }
     #loading.show { display: flex; }
-    .loading-car { font-size: 4rem; animation: loadBounce .55s ease-in-out infinite alternate; }
-    .loading-msg  { font-size: clamp(1rem, 3vw, 1.5rem); color: #FF6B35; margin-top: 14px; }
+    .load-car { font-size: 3.5rem; animation: loadBounce .6s ease-in-out infinite alternate; }
+    .load-msg  { font-size: clamp(1rem, 2.8vw, 1.4rem); font-weight: 800; color: var(--orange); margin-top: 14px; }
     @keyframes loadBounce {
-      from { transform: translateY(0) rotate(-5deg); }
-      to   { transform: translateY(-22px) rotate(5deg); }
+      from { transform: translateY(0)   rotate(-4deg); }
+      to   { transform: translateY(-20px) rotate(4deg); }
     }
 
-    /* ── ARRIVED OVERLAY ── */
-    #arrived-overlay {
+    /* ── ARRIVED ── */
+    #arrived {
       position: fixed; inset: 0;
-      background: rgba(76,175,80,.93);
+      background: rgba(123,198,126,.93);
       display: none; flex-direction: column;
-      align-items: center; justify-content: center;
-      z-index: 90; text-align: center;
+      align-items: center; justify-content: center; z-index: 90; text-align: center;
     }
-    #arrived-overlay.show { display: flex; }
-    .arrived-bang  { font-size: clamp(4rem, 14vw, 9rem); animation: arrBounce 1s ease-in-out infinite; }
-    .arrived-text  { font-size: clamp(2.5rem, 8vw, 5.5rem); color: white; text-shadow: 3px 3px 0 #2E7D32; animation: popIn .5s cubic-bezier(.175,.885,.32,1.275); }
-    .arrived-sub   { font-size: clamp(1rem, 3vw, 1.6rem); color: #F1F8E9; margin-top: 8px; }
-    .arrived-newtrip {
-      margin-top: 24px; background: white; color: #2E7D32;
-      border: none; border-radius: 18px; padding: 12px 28px;
-      font-size: clamp(1rem, 2.5vw, 1.3rem); font-family: inherit; cursor: pointer;
-    }
-    @keyframes arrBounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
-    @keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
+    #arrived.show { display: flex; }
+    .arr-bang { font-size: clamp(4rem, 13vw, 8rem); animation: arrBounce 1s ease-in-out infinite; }
+    .arr-text  { font-size: clamp(2.2rem, 7.5vw, 5rem); font-weight: 900; color: white; filter: drop-shadow(0 3px 0 #3A7A3E); animation: popIn .5s cubic-bezier(.175,.885,.32,1.275); }
+    .arr-sub   { font-size: clamp(.9rem, 2.5vw, 1.4rem); font-weight: 700; color: rgba(255,255,255,.9); margin-top: 8px; }
+    .arr-btn   { margin-top: 24px; background: white; color: #3A7A3E; border: none; border-radius: 18px; padding: 12px 28px; font-size: clamp(.9rem, 2.3vw, 1.2rem); font-family: 'Nunito', sans-serif; font-weight: 800; cursor: pointer; box-shadow: 0 4px 0 #2A6A2E; }
+    @keyframes arrBounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-18px); } }
+    @keyframes popIn     { from { transform: scale(0); } to { transform: scale(1); } }
   </style>
 </head>
 <body>
 
 <!-- ── LOADING ── -->
 <div id="loading">
-  <div class="loading-car">🚗</div>
-  <div class="loading-msg" id="loading-msg">Planning your adventure...</div>
+  <div class="load-car">🚗</div>
+  <div class="load-msg" id="load-msg">Planning your adventure...</div>
 </div>
 
 <!-- ── ARRIVED ── -->
-<div id="arrived-overlay">
-  <div class="arrived-bang">🎉</div>
-  <div class="arrived-text">WE'RE HERE!</div>
-  <div class="arrived-sub">You made it! Amazing job! 🥳</div>
-  <button class="arrived-newtrip" onclick="newTrip()">✏️ Plan a New Trip</button>
+<div id="arrived">
+  <div class="arr-bang">🎉</div>
+  <div class="arr-text">WE'RE HERE!</div>
+  <div class="arr-sub">You made it! Amazing! 🥳</div>
+  <button class="arr-btn" onclick="newTrip()">Plan a New Trip</button>
 </div>
 
 <!-- ── ADD STOP MODAL ── -->
-<div id="stop-modal-overlay">
-  <div class="stop-modal">
-    <h3>➕ Add a Stop</h3>
-    <div class="modal-icon-row" id="modal-icon-row">
-      <button class="modal-icon-btn selected" data-icon="🍔" onclick="selectModalIcon(this)">🍔</button>
-      <button class="modal-icon-btn" data-icon="⛽" onclick="selectModalIcon(this)">⛽</button>
-      <button class="modal-icon-btn" data-icon="🏨" onclick="selectModalIcon(this)">🏨</button>
-      <button class="modal-icon-btn" data-icon="🎯" onclick="selectModalIcon(this)">🎯</button>
-      <button class="modal-icon-btn" data-icon="📍" onclick="selectModalIcon(this)">📍</button>
+<div id="modal-overlay">
+  <div class="modal-card">
+    <div class="modal-title">Add a Stop</div>
+    <div class="modal-icons" id="modal-icons">
+      <button class="mi-btn sel" data-icon="🍔" onclick="pickIcon(this)">🍔</button>
+      <button class="mi-btn"     data-icon="⛽" onclick="pickIcon(this)">⛽</button>
+      <button class="mi-btn"     data-icon="🏨" onclick="pickIcon(this)">🏨</button>
+      <button class="mi-btn"     data-icon="🎯" onclick="pickIcon(this)">🎯</button>
+      <button class="mi-btn"     data-icon="📍" onclick="pickIcon(this)">📍</button>
     </div>
-    <input class="modal-addr-input"  id="modal-addr"  placeholder="City or address (e.g. Nashville, TN)" />
-    <input class="modal-label-input" id="modal-label" placeholder="Label (e.g. Lunch stop) — optional" />
-    <div id="modal-error"></div>
-    <div class="modal-btns">
-      <button class="modal-cancel-btn"  onclick="closeStopModal()">Cancel</button>
-      <button class="modal-confirm-btn" onclick="confirmAddStop()">Add Stop ✓</button>
+    <input class="modal-input" id="modal-addr"  placeholder="City or address (e.g. Nashville, TN)" />
+    <input class="modal-input" id="modal-label" placeholder="Label — optional (e.g. Lunch stop)" />
+    <div id="modal-err"></div>
+    <div class="modal-row">
+      <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+      <button class="modal-ok"     onclick="confirmStop()">Add Stop</button>
     </div>
   </div>
 </div>
 
 <!-- ── SETUP SCREEN ── -->
 <div id="setup-screen">
-  <div class="setup-title">🚗 Are We There Yet? 🗺️</div>
-  <div class="setup-subtitle">Let's plan your awesome adventure!</div>
+  <div class="setup-title">Are We There Yet?</div>
+  <div class="setup-sub">Let's plan your adventure!</div>
   <div class="setup-card">
-    <div class="input-group">
-      <label>🏠 Where are we starting?</label>
-      <input type="text" id="origin-input" placeholder="e.g. Indianapolis, IN" />
+    <div class="field-wrap">
+      <span class="field-label">🏠 Starting from</span>
+      <input class="field-input" id="origin-input" placeholder="e.g. Indianapolis, IN" />
     </div>
-    <div class="input-group">
-      <label>🌟 Where are we going?</label>
-      <input type="text" id="dest-input" placeholder="e.g. Huntsville, AL" />
+    <div class="field-wrap">
+      <span class="field-label">⭐ Heading to</span>
+      <input class="field-input" id="dest-input" placeholder="e.g. Huntsville, AL" />
     </div>
-
-    <div class="stops-section">
-      <div class="stops-heading">🛑 Stops along the way <span style="color:#aaa;font-size:.8em">(optional)</span></div>
-      <div id="stops-list"></div>
-      <button class="add-stop-btn" onclick="addSetupStop()">+ Add a Stop</button>
-    </div>
-
-    <button class="go-btn" onclick="startTrip()">🚀 LET'S GO! 🚀</button>
+    <div class="stops-head">🛑 Stops along the way <span style="color:#C4B5AC;font-weight:600;font-size:.9em">(optional)</span></div>
+    <div id="stops-list"></div>
+    <button class="add-stop-btn" onclick="addSetupStop()">+ Add a Stop</button>
+    <button class="go-btn" onclick="startTrip()">Let's Go! 🚗</button>
     <div id="setup-error"></div>
   </div>
 </div>
 
 <!-- ── MAIN SCREEN ── -->
 <div id="main-screen">
-  <div class="cloud cloud-a"></div>
-  <div class="cloud cloud-b"></div>
-  <div class="cloud cloud-c"></div>
-  <div class="sun">☀️</div>
+  <div id="sky-layer"></div>
+  <div id="fog-overlay"></div>
+  <div id="lightning"></div>
+  <div id="star-field"></div>
+  <div id="weather-overlay"></div>
 
-  <div class="header">
-    <div class="app-title">🚗 Are We There Yet?</div>
-    <div class="stats-row">
-      <div class="stat">
-        <span class="stat-val" id="stat-miles">--</span>
-        <span class="stat-lbl">miles left</span>
-      </div>
-      <div class="stat">
-        <span class="stat-val" id="stat-eta">--</span>
-        <span class="stat-lbl">arrive</span>
-      </div>
-      <div class="stat">
-        <span class="stat-val" id="stat-pct">0%</span>
-        <span class="stat-lbl">done!</span>
-      </div>
-    </div>
-  </div>
+  <!-- Sun / Moon -->
+  <div id="sun"  onclick="tapSun()"><div class="sun-rays"></div><div class="sun-circle"></div></div>
+  <div id="moon"></div>
 
-  <div class="hill hill-1"></div>
-  <div class="hill hill-2"></div>
-  <div class="hill hill-3"></div>
-  <div class="hill hill-4"></div>
+  <!-- Clouds (each has inner .cloud-body for animation) -->
+  <div class="cloud cloud-a" style="left:-160px"  onclick="tapCloud(this)"><div class="cloud-body"></div></div>
+  <div class="cloud cloud-b" style="left:-130px"  onclick="tapCloud(this)"><div class="cloud-body"></div></div>
+  <div class="cloud cloud-c" style="left:-110px"  onclick="tapCloud(this)"><div class="cloud-body"></div></div>
+  <div class="cloud cloud-d" style="left:-180px"  onclick="tapCloud(this)"><div class="cloud-body"></div></div>
 
+  <!-- Trees -->
+  <div class="scene-tree" id="tree-l" style="bottom:18%;left:8%"  onclick="tapTree(this)">🌲</div>
+  <div class="scene-tree" id="tree-m" style="bottom:16%;left:52%" onclick="tapTree(this)">🌳</div>
+  <div class="scene-tree" id="tree-r" style="bottom:20%;right:6%" onclick="tapTree(this)">🌲</div>
+
+  <!-- Animals (populated by JS) -->
+  <div id="animal-1" class="animal" onclick="tapAnimal(this)"></div>
+  <div id="animal-2" class="animal" onclick="tapAnimal(this)"></div>
+  <div id="animal-3" class="animal" onclick="tapAnimal(this)"></div>
+
+  <!-- Hills -->
+  <div class="hill h1"></div>
+  <div class="hill h2"></div>
+  <div class="hill h3"></div>
+  <div class="hill h4"></div>
+
+  <!-- Road -->
   <div class="road" id="road">
-    <div class="road-top-edge"></div>
-    <div class="road-bot-edge"></div>
+    <div class="road-edge top"></div>
+    <div class="road-edge bot"></div>
     <div class="road-done" id="road-done"></div>
   </div>
 
-  <div class="car" id="car" style="left:5%">🚗</div>
+  <!-- Audi Q7 car -->
+  <div id="car-wrap" style="left:5%" onclick="tapCar()">
+    <div id="honk-bubble">Beep beep! 📯</div>
+    <svg class="car-svg" viewBox="0 0 220 90" xmlns="http://www.w3.org/2000/svg">
+      <!-- shadow -->
+      <ellipse cx="110" cy="87" rx="90" ry="4" fill="rgba(0,0,0,.15)"/>
+      <!-- main body -->
+      <path d="M 18,42 L 18,57 C 18,60 20,62 23,62 L 197,62 C 200,62 202,60 202,57 L 202,42 Z"
+            fill="#F6F6F6" stroke="#DCDCDC" stroke-width="1.2"/>
+      <!-- lower sill -->
+      <path d="M 24,57 L 196,57 L 200,62 L 20,62 Z" fill="#E4E4E4"/>
+      <!-- cabin / roof -->
+      <path d="M 58,42 L 68,18 L 162,18 L 175,42 Z" fill="#EFEFEF" stroke="#DCDCDC" stroke-width="1"/>
+      <!-- windshield -->
+      <path d="M 60,42 L 70,20 L 116,20 L 116,42 Z" fill="#9BBFCC" opacity=".88" stroke="#B0C5CC" stroke-width=".8"/>
+      <!-- rear window -->
+      <path d="M 120,42 L 120,20 L 158,20 L 170,42 Z" fill="#9BBFCC" opacity=".88" stroke="#B0C5CC" stroke-width=".8"/>
+      <!-- B-pillar -->
+      <rect x="115" y="19" width="5" height="23" fill="#D8D8D8"/>
+      <!-- roof panel -->
+      <rect x="68" y="16" width="94" height="3" rx="1.5" fill="#E2E2E2"/>
+      <!-- roof rails -->
+      <rect x="70" y="15" width="90" height="1.8" rx=".9" fill="#BBBBBB"/>
+      <!-- front headlight DRL -->
+      <path d="M 192,36 L 202,36 L 202,40 L 192,40 Z" fill="#FFFAAA" opacity=".92"/>
+      <path d="M 195,36 L 202,36 L 202,37.5 Z" fill="white" opacity=".6"/>
+      <!-- front grille singleframe -->
+      <path d="M 180,44 L 202,44 L 202,57 L 180,57 Q 178,57 178,55 L 178,46 Q 178,44 180,44 Z"
+            fill="#181818"/>
+      <rect x="183" y="46" width="17" height="9" fill="#222"/>
+      <line x1="183" y1="48.5" x2="200" y2="48.5" stroke="#333" stroke-width=".8"/>
+      <line x1="183" y1="51.5" x2="200" y2="51.5" stroke="#333" stroke-width=".8"/>
+      <line x1="183" y1="54.5" x2="200" y2="54.5" stroke="#333" stroke-width=".8"/>
+      <line x1="189" y1="44"   x2="189" y2="57"   stroke="#333" stroke-width=".6"/>
+      <line x1="195" y1="44"   x2="195" y2="57"   stroke="#333" stroke-width=".6"/>
+      <!-- Audi 4 rings in grille -->
+      <circle cx="183.5" cy="50.5" r="2.8" fill="none" stroke="#777" stroke-width="1.2"/>
+      <circle cx="189"   cy="50.5" r="2.8" fill="none" stroke="#777" stroke-width="1.2"/>
+      <circle cx="194.5" cy="50.5" r="2.8" fill="none" stroke="#777" stroke-width="1.2"/>
+      <!-- fog light -->
+      <rect x="182" y="57" width="10" height="4" rx="2" fill="#FFFDE0" opacity=".75"/>
+      <!-- front bumper -->
+      <path d="M 179,57 L 202,57 L 202,62 L 183,62 Z" fill="#E8E8E8"/>
+      <!-- tail light -->
+      <path d="M 18,38 L 28,38 L 28,57 L 18,57 Q 16,57 16,55 L 16,40 Q 16,38 18,38 Z"
+            fill="#CC2222"/>
+      <path d="M 18,38 L 28,38 L 28,44 Z" fill="#FF6666" opacity=".55"/>
+      <rect x="18" y="52" width="9" height="4" rx="1.2" fill="white" opacity=".65"/>
+      <!-- rear bumper -->
+      <path d="M 18,57 L 40,57 L 40,62 L 18,62 Z" fill="#E8E8E8"/>
+      <!-- door handles -->
+      <rect x="76" y="40" width="14" height="3.5" rx="1.75" fill="#CCCCCC"/>
+      <rect x="134" y="40" width="14" height="3.5" rx="1.75" fill="#CCCCCC"/>
+      <!-- character crease line -->
+      <path d="M 30,47 L 178,47" stroke="#DCDCDC" stroke-width=".9" opacity=".8"/>
+      <!-- wheel arches -->
+      <path d="M 148,62 Q 145,80 170,80 Q 195,80 192,62" fill="#E2E2E2" stroke="#D0D0D0" stroke-width=".9"/>
+      <path d="M 34,62  Q 31,80 56,80  Q 81,80  78,62"  fill="#E2E2E2" stroke="#D0D0D0" stroke-width=".9"/>
+      <!-- front wheel -->
+      <circle cx="170" cy="76" r="14" fill="#1C1C1C"/>
+      <circle cx="170" cy="76" r="9.5" fill="#303030"/>
+      <circle cx="170" cy="76" r="3.8" fill="#888"/>
+      <line x1="170" y1="62" x2="170" y2="90" stroke="#555" stroke-width="2.2"/>
+      <line x1="156" y1="76" x2="184" y2="76" stroke="#555" stroke-width="2.2"/>
+      <line x1="159" y1="65.5" x2="181" y2="86.5" stroke="#555" stroke-width="1.8"/>
+      <line x1="181" y1="65.5" x2="159" y2="86.5" stroke="#555" stroke-width="1.8"/>
+      <circle cx="170" cy="76" r="7" fill="none" stroke="#444" stroke-width=".9"/>
+      <!-- rear wheel -->
+      <circle cx="56" cy="76" r="14" fill="#1C1C1C"/>
+      <circle cx="56" cy="76" r="9.5" fill="#303030"/>
+      <circle cx="56" cy="76" r="3.8" fill="#888"/>
+      <line x1="56" y1="62" x2="56" y2="90" stroke="#555" stroke-width="2.2"/>
+      <line x1="42" y1="76" x2="70" y2="76" stroke="#555" stroke-width="2.2"/>
+      <line x1="45" y1="65.5" x2="67" y2="86.5" stroke="#555" stroke-width="1.8"/>
+      <line x1="67" y1="65.5" x2="45" y2="86.5" stroke="#555" stroke-width="1.8"/>
+      <circle cx="56" cy="76" r="7" fill="none" stroke="#444" stroke-width=".9"/>
+    </svg>
+  </div>
 
+  <!-- Route ends -->
   <div class="route-end" id="marker-start" style="left:5%">
     <div class="route-end-icon">🏠</div>
     <span class="route-end-lbl" id="lbl-start">Start</span>
@@ -660,514 +937,586 @@
     <span class="route-end-lbl" id="lbl-end">End</span>
   </div>
 
+  <!-- Header -->
+  <div class="header">
+    <div class="app-title">Are We There Yet?</div>
+    <div class="stats-row">
+      <div class="stat"><span class="stat-val" id="stat-miles">--</span><span class="stat-lbl">miles left</span></div>
+      <div class="stat"><span class="stat-val" id="stat-eta">--</span><span class="stat-lbl">arrive</span></div>
+      <div class="stat"><span class="stat-val" id="stat-pct">0%</span><span class="stat-lbl">done!</span></div>
+    </div>
+  </div>
+
+  <!-- Weather badge -->
+  <div id="weather-badge"></div>
+
+  <!-- Snack bar -->
   <div class="snack-bar">
-    <span class="snack-lbl">🍪 Snacks left:</span>
+    <span class="snack-lbl">🍪 Snacks:</span>
     <div class="snack-track" id="snack-track"></div>
     <span class="snack-note" id="snack-note"></span>
   </div>
 
-  <button class="refresh-btn"      id="refresh-btn"      onclick="manualRefresh()">🔄 Update!</button>
-  <button class="add-stop-trip-btn"                       onclick="openStopModal()">➕ Add Stop</button>
-  <button class="new-trip-btn"                            onclick="newTrip()">✏️ New Trip</button>
-</div>
+  <button class="btn-pill" id="refresh-btn"  onclick="manualRefresh()">🔄 Update</button>
+  <button class="btn-pill" id="add-stop-btn" onclick="openModal()">+ Add Stop</button>
+  <button class="btn-pill" id="new-trip-btn" onclick="newTrip()">✏️ New Trip</button>
+</div><!-- /#main-screen -->
 
 <script>
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════
 //  CONFIG
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════
 const CONFIG = {
   API_KEY: 'AIzaSyBDIUQ6_jcNtOX75HkezUdqsxsoYbsel18',
   UPDATE_INTERVAL_MS: 5 * 60 * 1000,
-  ROAD_START_PCT: 5,
-  ROAD_END_PCT:   95,
+  ROAD_S: 5, ROAD_E: 95,
   SNACKS: ['🍪','🍎','🥨','🍫','🧃','🍊','🥜','🍬','🍇','🍿'],
-  ARRIVED_WITHIN_M: 800,
+  ARRIVED_M: 800,
 };
 
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════
 //  STATE
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════
 let S = {
-  origin: '', destination: '',
-  totalDistM: 0, totalDurS: 0,
-  remDistM: 0,   remDurS: 0,
-  milestones: [],   // [{fraction, name}]  — auto city markers
-  stops: [],        // [{fraction, icon, label}]  — user-defined stops
-  routePath: [],    // [{lat,lng}] decoded polyline for stop positioning
-  progress: 0,
-  timer: null,
+  origin:'', destination:'',
+  totalDistM:0, totalDurS:0, remDistM:0, remDurS:0,
+  milestones:[], stops:[], routePath:[], progress:0, timer:null,
 };
 
-// ═══════════════════════════════════════════════════════
-//  SETUP SCREEN — stop rows
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════
+//  SETUP STOPS
+// ═══════════════════════════════════════════
 function addSetupStop() {
   const list = document.getElementById('stops-list');
   if (list.children.length >= 5) return;
   const row = document.createElement('div');
   row.className = 'stop-row';
   row.innerHTML = `
-    <select class="stop-icon-select">
-      <option value="🍔">🍔 Food</option>
-      <option value="⛽">⛽ Gas</option>
-      <option value="🏨">🏨 Hotel</option>
-      <option value="🎯">🎯 Activity</option>
-      <option value="📍">📍 Stop</option>
+    <select class="stop-icon-sel">
+      <option value="🍔">🍔</option><option value="⛽">⛽</option>
+      <option value="🏨">🏨</option><option value="🎯">🎯</option><option value="📍">📍</option>
     </select>
-    <input class="stop-address-input" placeholder="City or address (e.g. Nashville, TN)" />
-    <button class="stop-remove-btn" onclick="this.parentElement.remove()">✕</button>`;
+    <input class="stop-addr-inp" placeholder="City or address" />
+    <button class="stop-rm-btn" onclick="this.parentElement.remove()">✕</button>`;
   list.appendChild(row);
   row.querySelector('input').focus();
 }
-
 function getSetupStops() {
-  return Array.from(document.querySelectorAll('.stop-row')).map(row => ({
-    icon:    row.querySelector('.stop-icon-select').value,
-    address: row.querySelector('.stop-address-input').value.trim(),
+  return Array.from(document.querySelectorAll('.stop-row')).map(r => ({
+    icon: r.querySelector('.stop-icon-sel').value,
+    address: r.querySelector('.stop-addr-inp').value.trim(),
   })).filter(s => s.address);
 }
 
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════
 //  MAPS JS API
-// ═══════════════════════════════════════════════════════
-let _mapsReady = null;
-function loadMapsAPI() {
-  if (_mapsReady) return _mapsReady;
-  _mapsReady = new Promise((resolve, reject) => {
-    if (window.google?.maps) { resolve(); return; }
-    window.__mapsLoaded = resolve;
+// ═══════════════════════════════════════════
+let _maps = null;
+function loadMaps() {
+  if (_maps) return _maps;
+  _maps = new Promise((res, rej) => {
+    if (window.google?.maps) { res(); return; }
+    window.__mapsLoaded = res;
     const s = document.createElement('script');
     s.src = `https://maps.googleapis.com/maps/api/js?key=${CONFIG.API_KEY}&callback=__mapsLoaded`;
-    s.onerror = () => reject(new Error('Could not load Google Maps. Check your API key.'));
+    s.onerror = () => rej(new Error('Could not load Google Maps. Check your API key.'));
     document.head.appendChild(s);
   });
-  return _mapsReady;
+  return _maps;
 }
 
-async function apiDirections(origin, dest, waypoints = []) {
-  await loadMapsAPI();
+async function apiDirs(origin, dest, wpts = []) {
+  await loadMaps();
   const svc = new google.maps.DirectionsService();
-  return new Promise((resolve, reject) => {
-    svc.route({
-      origin, destination: dest,
-      waypoints: waypoints.map(w => ({ location: w, stopover: true })),
+  return new Promise((res, rej) => {
+    svc.route({ origin, destination: dest,
+      waypoints: wpts.map(w => ({ location: w, stopover: true })),
       travelMode: google.maps.TravelMode.DRIVING,
-    }, (result, status) => {
-      if (status === google.maps.DirectionsStatus.OK) resolve(result);
-      else reject(new Error(`Could not find that route (${status}). Try being more specific.`));
-    });
+    }, (r, st) => st === 'OK' ? res(r) : rej(new Error(`Could not find that route (${st}).`)));
   });
 }
 
-// Scan all geocoding results for a proper city-level locality
-async function findCityName(lat, lng) {
-  await loadMapsAPI();
-  const geocoder = new google.maps.Geocoder();
+async function cityAt(lat, lng) {
+  await loadMaps();
+  const gc = new google.maps.Geocoder();
   return new Promise(resolve => {
-    geocoder.geocode({ location: { lat, lng } }, (results, status) => {
-      if (status !== 'OK' || !results?.length) { resolve(null); return; }
-      // Prefer a result whose top-level type is 'locality' (= a city)
+    gc.geocode({ location: { lat, lng } }, (results, st) => {
+      if (st !== 'OK' || !results?.length) { resolve(null); return; }
       for (const r of results) {
         if (r.types.includes('locality')) {
           const c = r.address_components.find(x => x.types.includes('locality'));
           if (c) { resolve(c.long_name); return; }
         }
       }
-      // Fall back to administrative_area_level_2 (county seat / major city)
       for (const r of results) {
         const c = r.address_components.find(x => x.types.includes('administrative_area_level_2'));
-        if (c) { resolve(c.short_name.replace(' County','').replace(' Parish','')); return; }
+        if (c) { resolve(c.short_name.replace(/ County| Parish/g, '')); return; }
       }
       resolve(null);
     });
   });
 }
 
-// Geocode an address to LatLng
-async function geocodeAddress(address) {
-  await loadMapsAPI();
-  const geocoder = new google.maps.Geocoder();
-  return new Promise((resolve, reject) => {
-    geocoder.geocode({ address }, (results, status) => {
-      if (status === 'OK' && results?.length) resolve(results[0].geometry.location);
-      else reject(new Error(`Could not find "${address}"`));
-    });
+async function geocode(address) {
+  await loadMaps();
+  const gc = new google.maps.Geocoder();
+  return new Promise((res, rej) => {
+    gc.geocode({ address }, (results, st) =>
+      st === 'OK' ? res(results[0].geometry.location) : rej(new Error(`Can't find "${address}"`))
+    );
   });
 }
 
-// ═══════════════════════════════════════════════════════
-//  POLYLINE HELPERS
-// ═══════════════════════════════════════════════════════
-function haversineM(la1, lo1, la2, lo2) {
-  const R = 6371000, r = Math.PI/180;
-  const dLa = (la2-la1)*r, dLo = (lo2-lo1)*r;
-  const a = Math.sin(dLa/2)**2 + Math.cos(la1*r)*Math.cos(la2*r)*Math.sin(dLo/2)**2;
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+// ═══════════════════════════════════════════
+//  POLYLINE UTILS
+// ═══════════════════════════════════════════
+function hav(la1,lo1,la2,lo2){
+  const R=6371000, r=Math.PI/180;
+  const a=Math.sin((la2-la1)*r/2)**2+Math.cos(la1*r)*Math.cos(la2*r)*Math.sin((lo2-lo1)*r/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 }
-
-function polylineLen(pts) {
-  let t = 0;
-  for (let i = 1; i < pts.length; i++) t += haversineM(pts[i-1].lat, pts[i-1].lng, pts[i].lat, pts[i].lng);
-  return t;
-}
-
-function ptAtFraction(pts, f) {
-  const total = polylineLen(pts), target = total * f;
-  let cum = 0;
-  for (let i = 1; i < pts.length; i++) {
-    const seg = haversineM(pts[i-1].lat, pts[i-1].lng, pts[i].lat, pts[i].lng);
-    if (cum + seg >= target) {
-      const t = (target - cum) / seg;
-      return { lat: pts[i-1].lat + (pts[i].lat - pts[i-1].lat)*t, lng: pts[i-1].lng + (pts[i].lng - pts[i-1].lng)*t };
-    }
-    cum += seg;
+function pathLen(pts){let t=0;for(let i=1;i<pts.length;i++)t+=hav(pts[i-1].lat,pts[i-1].lng,pts[i].lat,pts[i].lng);return t;}
+function ptAt(pts,f){
+  const tot=pathLen(pts),tgt=tot*f;let cum=0;
+  for(let i=1;i<pts.length;i++){
+    const seg=hav(pts[i-1].lat,pts[i-1].lng,pts[i].lat,pts[i].lng);
+    if(cum+seg>=tgt){const t=(tgt-cum)/seg;return{lat:pts[i-1].lat+(pts[i].lat-pts[i-1].lat)*t,lng:pts[i-1].lng+(pts[i].lng-pts[i-1].lng)*t};}
+    cum+=seg;
   }
   return pts[pts.length-1];
 }
-
-// Find fraction along path closest to a given LatLng
-function fractionForLatLng(pts, lat, lng) {
-  let bestDist = Infinity, bestFrac = 0;
-  const total = polylineLen(pts);
-  let cum = 0;
-  for (let i = 1; i < pts.length; i++) {
-    const seg = haversineM(pts[i-1].lat, pts[i-1].lng, pts[i].lat, pts[i].lng);
-    const d = haversineM(pts[i].lat, pts[i].lng, lat, lng);
-    if (d < bestDist) { bestDist = d; bestFrac = (cum + seg) / total; }
-    cum += seg;
+function fracFor(pts,lat,lng){
+  const tot=pathLen(pts);let best=Infinity,frac=0,cum=0;
+  for(let i=1;i<pts.length;i++){
+    const seg=hav(pts[i-1].lat,pts[i-1].lng,pts[i].lat,pts[i].lng);
+    const d=hav(pts[i].lat,pts[i].lng,lat,lng);
+    if(d<best){best=d;frac=(cum+seg)/tot;}
+    cum+=seg;
   }
-  return Math.max(0, Math.min(1, bestFrac));
+  return Math.max(0,Math.min(1,frac));
 }
 
-// ═══════════════════════════════════════════════════════
-//  PARSE ROUTE RESULT
-// ═══════════════════════════════════════════════════════
-function parseDirectionsResult(result, stopAddresses) {
-  const route = result.routes[0];
-
-  // Total distance & duration across all legs
-  const legs = route.legs;
-  const totalDistM = legs.reduce((s, l) => s + l.distance.value, 0);
-  const totalDurS  = legs.reduce((s, l) => s + l.duration.value, 0);
-
-  // Flat LatLng path
-  const path = route.overview_path.map(p => ({ lat: p.lat(), lng: p.lng() }));
-
-  // Stop fractions: cumulative distance at end of each leg / total
-  const stopFractions = [];
-  let cum = 0;
-  for (let i = 0; i < legs.length - 1; i++) {
-    cum += legs[i].distance.value;
-    stopFractions.push(cum / totalDistM);
-  }
-
-  return { totalDistM, totalDurS, path, stopFractions };
+// ═══════════════════════════════════════════
+//  PARSE ROUTE
+// ═══════════════════════════════════════════
+function parseRoute(result) {
+  const legs = result.routes[0].legs;
+  const totalDistM = legs.reduce((s,l)=>s+l.distance.value,0);
+  const totalDurS  = legs.reduce((s,l)=>s+l.duration.value,0);
+  const path = result.routes[0].overview_path.map(p=>({lat:p.lat(),lng:p.lng()}));
+  let cum=0;
+  const stopFracs = legs.slice(0,-1).map(l=>{ cum+=l.distance.value; return cum/totalDistM; });
+  return {totalDistM,totalDurS,path,stopFracs};
 }
 
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════
 //  START TRIP
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════
 async function startTrip() {
-  const origin  = document.getElementById('origin-input').value.trim();
-  const dest    = document.getElementById('dest-input').value.trim();
-  const errEl   = document.getElementById('setup-error');
+  const origin = document.getElementById('origin-input').value.trim();
+  const dest   = document.getElementById('dest-input').value.trim();
+  const errEl  = document.getElementById('setup-error');
   errEl.textContent = '';
-
   if (!origin || !dest) return (errEl.textContent = 'Please fill in both boxes!');
   if (CONFIG.API_KEY === 'YOUR_API_KEY_HERE') return (errEl.textContent = '⚠️ Add your Google Maps API key.');
-
   const setupStops = getSetupStops();
-
-  showLoading('Planning your adventure...');
+  showLoad('Planning your adventure...');
   try {
-    const result = await apiDirections(origin, dest, setupStops.map(s => s.address));
-    const { totalDistM, totalDurS, path, stopFractions } = parseDirectionsResult(result, setupStops);
-
-    S.origin      = origin;
-    S.destination = dest;
-    S.totalDistM  = totalDistM;
-    S.totalDurS   = totalDurS;
-    S.remDistM    = totalDistM;
-    S.remDurS     = totalDurS;
-    S.routePath   = path;
-    S.progress    = 0;
-
-    // User stops from setup
-    S.stops = setupStops.map((s, i) => ({
-      icon:     s.icon,
-      label:    s.address.split(',')[0].slice(0, 18),
-      fraction: stopFractions[i] ?? (i+1) / (setupStops.length + 1),
+    const result = await apiDirs(origin, dest, setupStops.map(s=>s.address));
+    const {totalDistM,totalDurS,path,stopFracs} = parseRoute(result);
+    S.origin=origin; S.destination=dest;
+    S.totalDistM=totalDistM; S.totalDurS=totalDurS;
+    S.remDistM=totalDistM; S.remDurS=totalDurS;
+    S.routePath=path; S.progress=0;
+    S.stops = setupStops.map((s,i)=>({icon:s.icon,label:s.address.split(',')[0].slice(0,18),fraction:stopFracs[i]??((i+1)/(setupStops.length+1))}));
+    showLoad('Finding cities along the way...');
+    S.milestones = await Promise.all([.25,.5,.75].map(async f=>{
+      const pt=ptAt(path,f);
+      const name=await cityAt(pt.lat,pt.lng).catch(()=>null);
+      return {fraction:f,name:name||`${Math.round(f*100)}% there!`};
     }));
-
-    // Auto milestone cities at 25 / 50 / 75 %
-    showLoading('Finding cities along the way...');
-    S.milestones = await Promise.all([0.25, 0.5, 0.75].map(async f => {
-      const pt = ptAtFraction(path, f);
-      const name = await findCityName(pt.lat, pt.lng).catch(() => null);
-      return { fraction: f, name: name || `${Math.round(f*100)}% there!` };
-    }));
-
     saveTrip();
-    hideLoading();
-    launchMainScreen();
-  } catch (err) {
-    hideLoading();
+    hideLoad();
+    launchMain();
+  } catch(err) {
+    hideLoad();
     errEl.textContent = `Oops! ${err.message}`;
   }
 }
 
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════
 //  MAIN SCREEN
-// ═══════════════════════════════════════════════════════
-function launchMainScreen() {
+// ═══════════════════════════════════════════
+function launchMain() {
   document.getElementById('setup-screen').style.display = 'none';
   document.getElementById('main-screen').style.display  = 'block';
-
-  const clip = s => s.split(',')[0].slice(0, 13);
+  const clip = s=>s.split(',')[0].slice(0,13);
   document.getElementById('lbl-start').textContent = clip(S.origin);
   document.getElementById('lbl-end').textContent   = clip(S.destination);
-
   buildMarkers();
   buildSnackMeter();
+  placeAnimals();
   renderUI();
   positionCar(S.progress);
+  fetchWeather();
   updateFromGPS();
   if (S.timer) clearInterval(S.timer);
-  S.timer = setInterval(updateFromGPS, CONFIG.UPDATE_INTERVAL_MS);
+  S.timer = setInterval(()=>{ updateFromGPS(); fetchWeather(); }, CONFIG.UPDATE_INTERVAL_MS);
 }
 
 function buildMarkers() {
-  document.querySelectorAll('.milestone, .stop-marker').forEach(el => el.remove());
+  document.querySelectorAll('.milestone,.stop-marker').forEach(el=>el.remove());
   const road = document.getElementById('road');
-  const span = CONFIG.ROAD_END_PCT - CONFIG.ROAD_START_PCT;
-
-  // City milestones above road
-  S.milestones.forEach(m => {
-    const el = document.createElement('div');
-    el.className = 'milestone';
-    el.style.left = `${CONFIG.ROAD_START_PCT + m.fraction * span}%`;
-    el.innerHTML = `<div class="milestone-icon">🚩</div><div class="milestone-name">${m.name}</div><div class="milestone-post"></div>`;
+  const span = CONFIG.ROAD_E - CONFIG.ROAD_S;
+  S.milestones.forEach(m=>{
+    const el=document.createElement('div'); el.className='milestone';
+    el.style.left=`${CONFIG.ROAD_S+m.fraction*span}%`;
+    el.innerHTML=`<div class="milestone-flag">🚩</div><div class="milestone-name">${m.name}</div><div class="milestone-post"></div>`;
     road.appendChild(el);
   });
-
-  // User stops below road
-  S.stops.forEach(st => {
-    const el = document.createElement('div');
-    el.className = 'stop-marker';
-    el.style.left = `${CONFIG.ROAD_START_PCT + st.fraction * span}%`;
-    el.innerHTML = `
-      <div class="stop-marker-post"></div>
-      <div class="stop-marker-bubble">
-        <span class="stop-marker-emoji">${st.icon}</span>
-        <span class="stop-marker-name">${st.label}</span>
-      </div>`;
+  S.stops.forEach(st=>{
+    const el=document.createElement('div'); el.className='stop-marker';
+    el.style.left=`${CONFIG.ROAD_S+st.fraction*span}%`;
+    el.innerHTML=`<div class="stop-marker-post"></div><div class="stop-marker-pill"><span class="stop-marker-emoji">${st.icon}</span><span class="stop-marker-lbl">${st.label}</span></div>`;
     road.appendChild(el);
   });
 }
 
 function buildSnackMeter() {
-  document.getElementById('snack-track').innerHTML = CONFIG.SNACKS.map((s, i) =>
-    `<span class="snack-item" id="snack-${i}">${s}</span>`
-  ).join('');
+  document.getElementById('snack-track').innerHTML =
+    CONFIG.SNACKS.map((s,i)=>`<span class="snack-item" id="snack-${i}">${s}</span>`).join('');
 }
 
-// ═══════════════════════════════════════════════════════
-//  ADD STOP MODAL (mid-trip)
-// ═══════════════════════════════════════════════════════
-let _modalIcon = '🍔';
-
-function openStopModal() {
-  _modalIcon = '🍔';
-  document.querySelectorAll('.modal-icon-btn').forEach(b => b.classList.toggle('selected', b.dataset.icon === _modalIcon));
-  document.getElementById('modal-addr').value  = '';
-  document.getElementById('modal-label').value = '';
-  document.getElementById('modal-error').textContent = '';
-  document.getElementById('stop-modal-overlay').classList.add('show');
-  setTimeout(() => document.getElementById('modal-addr').focus(), 100);
-}
-
-function closeStopModal() {
-  document.getElementById('stop-modal-overlay').classList.remove('show');
-}
-
-function selectModalIcon(btn) {
-  _modalIcon = btn.dataset.icon;
-  document.querySelectorAll('.modal-icon-btn').forEach(b => b.classList.toggle('selected', b === btn));
-}
-
-async function confirmAddStop() {
-  const addr  = document.getElementById('modal-addr').value.trim();
-  const label = document.getElementById('modal-label').value.trim() || addr.split(',')[0].slice(0, 18);
-  const errEl = document.getElementById('modal-error');
-  errEl.textContent = '';
-
-  if (!addr) { errEl.textContent = 'Please enter an address or city.'; return; }
-
-  showLoading('Finding that stop...');
-  try {
-    const latLng = await geocodeAddress(addr);
-    const fraction = S.routePath.length
-      ? fractionForLatLng(S.routePath, latLng.lat(), latLng.lng())
-      : 0.5;
-
-    S.stops.push({ icon: _modalIcon, label, fraction });
-    S.stops.sort((a, b) => a.fraction - b.fraction);
-    saveTrip();
-    buildMarkers();
-    hideLoading();
-    closeStopModal();
-  } catch (err) {
-    hideLoading();
-    errEl.textContent = err.message;
-  }
-}
-
-// ═══════════════════════════════════════════════════════
-//  RENDER
-// ═══════════════════════════════════════════════════════
-function renderUI() {
-  const p    = Math.max(0, Math.min(1, S.progress));
-  const span = CONFIG.ROAD_END_PCT - CONFIG.ROAD_START_PCT;
-
-  positionCar(p);
-
-  const done = document.getElementById('road-done');
-  done.style.left  = `${CONFIG.ROAD_START_PCT}%`;
-  done.style.width = `${p * span}%`;
-
-  const miles = S.remDistM / 1609.344;
-  document.getElementById('stat-miles').textContent = miles < 1 ? '<1' : Math.round(miles);
-  document.getElementById('stat-eta').textContent   = fmtTime(new Date(Date.now() + S.remDurS * 1000));
-  document.getElementById('stat-pct').textContent   = `${Math.round(p * 100)}%`;
-
-  const eaten = Math.round(p * CONFIG.SNACKS.length);
-  CONFIG.SNACKS.forEach((_, i) =>
-    document.getElementById(`snack-${i}`)?.classList.toggle('eaten', i < eaten)
-  );
-  const left = CONFIG.SNACKS.length - eaten;
-  document.getElementById('snack-note').textContent =
-    left === 0 ? 'All gone! 😮' : left === CONFIG.SNACKS.length ? 'Trip just started!' : `${left} left 😋`;
-
-  if (S.totalDistM > 0 && S.remDistM < CONFIG.ARRIVED_WITHIN_M) {
-    clearInterval(S.timer);
-    document.getElementById('arrived-overlay').classList.add('show');
-  }
-}
-
-function positionCar(progress) {
-  const span   = CONFIG.ROAD_END_PCT - CONFIG.ROAD_START_PCT;
-  const car    = document.getElementById('car');
-  const road   = document.getElementById('road');
-  const roadTop = road.getBoundingClientRect().top;
-  const carPx   = parseFloat(getComputedStyle(car).fontSize);
-  car.style.left = `${CONFIG.ROAD_START_PCT + progress * span}%`;
-  car.style.top  = `${roadTop - carPx * 1.05}px`;
-}
-
-// ═══════════════════════════════════════════════════════
-//  GPS UPDATES
-// ═══════════════════════════════════════════════════════
-async function updateFromGPS() {
-  try {
-    const pos = await gpsPosition();
-    const result = await apiDirections(
-      `${pos.coords.latitude},${pos.coords.longitude}`,
-      S.destination
-    );
-    const leg = result.routes[0].legs[0];
-    S.remDistM = leg.distance.value;
-    S.remDurS  = leg.duration.value;
-    S.progress = Math.max(0, Math.min(1, 1 - S.remDistM / S.totalDistM));
-    renderUI();
-  } catch {
-    timeBasedFallback();
-  }
-}
-
-function timeBasedFallback() {
-  const saved = getSaved();
-  if (!saved) return;
-  const elapsed = (Date.now() - saved.startedAt) / 1000;
-  S.progress  = Math.min(1, elapsed / S.totalDurS);
-  S.remDistM  = Math.max(0, S.totalDistM * (1 - S.progress));
-  S.remDurS   = Math.max(0, S.totalDurS  - elapsed);
-  renderUI();
-}
-
-function gpsPosition() {
-  return new Promise((res, rej) => {
-    if (!navigator.geolocation) return rej(new Error('No GPS'));
-    navigator.geolocation.getCurrentPosition(res, rej, { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 });
+// ═══════════════════════════════════════════
+//  ANIMALS
+// ═══════════════════════════════════════════
+const ANIMALS = ['🐄','🐷','🦊','🐰','🦔','🦋','🐸','🦜','🐿️','🦌','🐢','🐝','🦚','🦄','🐦'];
+function placeAnimals() {
+  const picks = [...ANIMALS].sort(()=>Math.random()-.5).slice(0,3);
+  const spots = [
+    {bottom:'12%',left:'6%'},{bottom:'10%',left:'44%'},{bottom:'14%',right:'8%'}
+  ];
+  [1,2,3].forEach((n,i)=>{
+    const el = document.getElementById(`animal-${n}`);
+    el.textContent = picks[i];
+    const s = spots[i];
+    el.style.bottom = s.bottom;
+    if(s.left)  el.style.left  = s.left;
+    if(s.right) el.style.right = s.right;
   });
 }
 
-async function manualRefresh() {
-  const btn = document.getElementById('refresh-btn');
-  btn.disabled = true; btn.textContent = '⏳ Finding you...';
+// ═══════════════════════════════════════════
+//  TAP INTERACTIONS
+// ═══════════════════════════════════════════
+function tapCloud(el) {
+  el.classList.remove('pop');
+  void el.offsetWidth;
+  el.classList.add('pop');
+  el.addEventListener('animationend', ()=>el.classList.remove('pop'), {once:true});
+  sprayDrops(el);
+}
+
+function sprayDrops(cloud) {
+  const rect = cloud.querySelector('.cloud-body').getBoundingClientRect();
+  for (let i=0;i<5;i++) {
+    const drop = document.createElement('div');
+    drop.style.cssText = `position:fixed;left:${rect.left+Math.random()*rect.width}px;top:${rect.bottom}px;
+      font-size:${10+Math.random()*8}px;pointer-events:none;z-index:99;animation:dropFall .8s ease-in forwards;`;
+    drop.textContent = '💧';
+    document.body.appendChild(drop);
+    setTimeout(()=>drop.remove(), 900);
+  }
+}
+
+function tapCar() {
+  const wrap = document.getElementById('car-wrap');
+  const bubble = document.getElementById('honk-bubble');
+  wrap.classList.remove('honk'); void wrap.offsetWidth; wrap.classList.add('honk');
+  bubble.classList.add('show');
+  setTimeout(()=>{ bubble.classList.remove('show'); wrap.classList.remove('honk'); }, 1600);
+}
+
+function tapSun() {
+  const sun = document.getElementById('sun');
+  sun.classList.remove('burst'); void sun.offsetWidth; sun.classList.add('burst');
+  for(let i=0;i<8;i++) spawnParticle('⭐',sun.getBoundingClientRect());
+  sun.addEventListener('animationend',()=>sun.classList.remove('burst'),{once:true});
+}
+
+function tapTree(el) {
+  el.classList.remove('wobble'); void el.offsetWidth; el.classList.add('wobble');
+  el.addEventListener('animationend',()=>el.classList.remove('wobble'),{once:true});
+  spawnParticle('🍃',el.getBoundingClientRect());
+  spawnParticle('🍃',el.getBoundingClientRect());
+}
+
+function tapAnimal(el) {
+  el.classList.remove('dance'); void el.offsetWidth; el.classList.add('dance');
+  el.addEventListener('animationend',()=>el.classList.remove('dance'),{once:true});
+}
+
+function spawnParticle(emoji, rect) {
+  const p = document.createElement('div');
+  const x = rect.left + rect.width/2 + (Math.random()-.5)*40;
+  const dy = -(30+Math.random()*40);
+  const dx = (Math.random()-.5)*50;
+  p.style.cssText = `position:fixed;left:${x}px;top:${rect.top}px;font-size:${12+Math.random()*10}px;
+    pointer-events:none;z-index:99;animation:particleFly .7s ease-out forwards;
+    --dx:${dx}px;--dy:${dy}px;`;
+  p.textContent = emoji;
+  document.body.appendChild(p);
+  setTimeout(()=>p.remove(),750);
+}
+
+// ═══════════════════════════════════════════
+//  RENDER
+// ═══════════════════════════════════════════
+function renderUI() {
+  const p = Math.max(0,Math.min(1,S.progress));
+  const span = CONFIG.ROAD_E - CONFIG.ROAD_S;
+  positionCar(p);
+  const done = document.getElementById('road-done');
+  done.style.left  = `${CONFIG.ROAD_S}%`;
+  done.style.width = `${p*span}%`;
+  const miles = S.remDistM/1609.344;
+  document.getElementById('stat-miles').textContent = miles<1?'<1':Math.round(miles);
+  document.getElementById('stat-eta').textContent   = fmtTime(new Date(Date.now()+S.remDurS*1000));
+  document.getElementById('stat-pct').textContent   = `${Math.round(p*100)}%`;
+  const eaten = Math.round(p*CONFIG.SNACKS.length);
+  CONFIG.SNACKS.forEach((_,i)=>document.getElementById(`snack-${i}`)?.classList.toggle('eaten',i<eaten));
+  const left = CONFIG.SNACKS.length-eaten;
+  document.getElementById('snack-note').textContent =
+    left===0?'All gone! 😮':left===CONFIG.SNACKS.length?'Just starting!':left+' left 😋';
+  if(S.totalDistM>0&&S.remDistM<CONFIG.ARRIVED_M){clearInterval(S.timer);document.getElementById('arrived').classList.add('show');}
+}
+
+function positionCar(p) {
+  const car  = document.getElementById('car-wrap');
+  const road = document.getElementById('road');
+  const rTop = road.getBoundingClientRect().top;
+  const cH   = car.getBoundingClientRect().height;
+  car.style.left = `${CONFIG.ROAD_S+p*(CONFIG.ROAD_E-CONFIG.ROAD_S)}%`;
+  car.style.top  = `${rTop-cH+8}px`;
+}
+
+// ═══════════════════════════════════════════
+//  GPS
+// ═══════════════════════════════════════════
+async function updateFromGPS() {
+  try {
+    const pos = await gps();
+    const result = await apiDirs(`${pos.coords.latitude},${pos.coords.longitude}`,S.destination);
+    const leg = result.routes[0].legs[0];
+    S.remDistM=leg.distance.value; S.remDurS=leg.duration.value;
+    S.progress=Math.max(0,Math.min(1,1-S.remDistM/S.totalDistM));
+    renderUI();
+  } catch { timeFallback(); }
+}
+
+function timeFallback() {
+  const sv=getSaved(); if(!sv)return;
+  const el=(Date.now()-sv.startedAt)/1000;
+  S.progress=Math.min(1,el/S.totalDurS);
+  S.remDistM=Math.max(0,S.totalDistM*(1-S.progress));
+  S.remDurS =Math.max(0,S.totalDurS-el);
+  renderUI();
+}
+
+function gps(){
+  return new Promise((res,rej)=>{
+    if(!navigator.geolocation)return rej(new Error('No GPS'));
+    navigator.geolocation.getCurrentPosition(res,rej,{enableHighAccuracy:true,timeout:15000,maximumAge:60000});
+  });
+}
+
+async function manualRefresh(){
+  const btn=document.getElementById('refresh-btn');
+  btn.disabled=true; btn.textContent='⏳ Finding you...';
   await updateFromGPS();
-  btn.disabled = false; btn.textContent = '🔄 Update!';
+  btn.disabled=false; btn.textContent='🔄 Update';
 }
 
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════
+//  WEATHER  (Open-Meteo — no API key needed)
+// ═══════════════════════════════════════════
+const WEATHER_SCENES = {
+  sunny:        {sky:['#7EC8E3','#B8E0F0'],grass:'#7BC67E',grass2:'#5BA05E',sun:true, moon:false,rain:0,snow:false,fog:false,stars:false,badge:'☀️ Sunny'},
+  partlyCloudy: {sky:['#88C8DC','#AAD8EC'],grass:'#7BC67E',grass2:'#5BA05E',sun:true, moon:false,rain:0,snow:false,fog:false,stars:false,badge:'⛅ Partly Cloudy'},
+  overcast:     {sky:['#9AACB8','#B8C8D0'],grass:'#6AB46E',grass2:'#4E9452',sun:false,moon:false,rain:0,snow:false,fog:false,stars:false,badge:'☁️ Cloudy'},
+  drizzle:      {sky:['#8898A8','#9AACBC'],grass:'#5EA462',grass2:'#428246',sun:false,moon:false,rain:1,snow:false,fog:false,stars:false,badge:'🌦 Drizzle'},
+  rain:         {sky:['#6A8090','#80949E'],grass:'#549858',grass2:'#38763C',sun:false,moon:false,rain:2,snow:false,fog:false,stars:false,badge:'🌧 Raining'},
+  storm:        {sky:['#3A4A54','#4E6070'],grass:'#3E7A42',grass2:'#286630',sun:false,moon:false,rain:3,snow:false,fog:false,stars:false,badge:'⛈ Thunderstorm'},
+  snow:         {sky:['#C8D8E4','#DCE8F0'],grass:'#D4E8D4',grass2:'#B0D4B0',sun:false,moon:false,rain:0,snow:true, fog:false,stars:false,badge:'❄️ Snow'},
+  fog:          {sky:['#B0B8C0','#C8CDD2'],grass:'#7AB07C',grass2:'#5A9060',sun:false,moon:false,rain:0,snow:false,fog:true, stars:false,badge:'🌫 Foggy'},
+  night:        {sky:['#1C2C44','#2A3C58'],grass:'#2E5832',grass2:'#1E4228',sun:false,moon:true, rain:0,snow:false,fog:false,stars:true, badge:'🌙 Night'},
+  nightRain:    {sky:['#141C28','#1E2C3C'],grass:'#244828',grass2:'#142E18',sun:false,moon:false,rain:2,snow:false,fog:false,stars:false,badge:'🌧 Rainy Night'},
+};
+
+function wmoToScene(code, isDay) {
+  if (!isDay) return code>=51?'nightRain':'night';
+  if (code===0)             return 'sunny';
+  if (code<=2)              return 'partlyCloudy';
+  if (code<=3)              return 'overcast';
+  if (code<=48)             return 'fog';
+  if (code<=57)             return 'drizzle';
+  if (code<=67)             return 'rain';
+  if (code<=77)             return 'snow';
+  if (code<=82)             return 'rain';
+  if (code<=86)             return 'snow';
+  return 'storm';
+}
+
+async function fetchWeather() {
+  try {
+    const pos = await gps().catch(async ()=>{
+      // fallback: use midpoint of route
+      if(!S.routePath.length) throw new Error('no path');
+      return {coords: ptAt(S.routePath,.5)};
+    });
+    const lat = pos.coords.latitude ?? pos.coords.lat;
+    const lng = pos.coords.longitude?? pos.coords.lng;
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=weather_code,is_day&timezone=auto`;
+    const data = await fetch(url).then(r=>r.json());
+    const code  = data.current.weather_code;
+    const isDay = data.current.is_day === 1;
+    applyWeather(wmoToScene(code, isDay));
+  } catch { /* silently skip weather if unavailable */ }
+}
+
+function applyWeather(sceneName) {
+  const sc = WEATHER_SCENES[sceneName] || WEATHER_SCENES.sunny;
+  const sky = document.getElementById('sky-layer');
+  sky.style.background = `linear-gradient(180deg,${sc.sky[0]} 0%,${sc.sky[1]} 48%,${sc.grass} 48%,${sc.grass2} 100%)`;
+  document.getElementById('sun').style.display  = sc.sun  ? 'block':'none';
+  document.getElementById('moon').style.display = sc.moon ? 'block':'none';
+  buildStars(sc.stars);
+  buildRain(sc.rain);
+  buildSnow(sc.snow);
+  document.getElementById('fog-overlay').style.background = sc.fog ? 'rgba(200,212,218,.38)':'rgba(0,0,0,0)';
+  const badge = document.getElementById('weather-badge');
+  badge.textContent = sc.badge; badge.style.display='block';
+  if (sceneName==='storm') scheduleLightning();
+}
+
+function buildStars(on) {
+  const sf = document.getElementById('star-field');
+  sf.innerHTML='';
+  if(!on) return;
+  for(let i=0;i<60;i++){
+    const s=document.createElement('div');
+    const sz=1+Math.random()*2;
+    s.style.cssText=`position:absolute;width:${sz}px;height:${sz}px;border-radius:50%;
+      background:rgba(255,255,240,${.4+Math.random()*.6});
+      left:${Math.random()*100}%;top:${Math.random()*100}%;
+      animation:twinkle ${1.5+Math.random()*2}s ease-in-out infinite;
+      animation-delay:${Math.random()*3}s;`;
+    sf.appendChild(s);
+  }
+}
+
+function buildRain(intensity) {
+  const ov = document.getElementById('weather-overlay');
+  ov.innerHTML='';
+  if(!intensity) return;
+  const count = intensity===3?100:intensity===2?55:28;
+  for(let i=0;i<count;i++){
+    const d=document.createElement('div');
+    d.className='raindrop';
+    d.style.left=`${Math.random()*105}%`;
+    d.style.height=`${8+Math.random()*12}px`;
+    d.style.animationDelay=`${Math.random()*2}s`;
+    d.style.animationDuration=`${.35+Math.random()*.35}s`;
+    ov.appendChild(d);
+  }
+}
+
+function buildSnow(on) {
+  const ov = document.getElementById('weather-overlay');
+  if(!on){if(!ov.querySelector('.raindrop'))ov.innerHTML='';return;}
+  ov.innerHTML='';
+  for(let i=0;i<45;i++){
+    const s=document.createElement('div');
+    s.className='snowflake';
+    s.textContent='❄';
+    s.style.left=`${Math.random()*100}%`;
+    s.style.fontSize=`${7+Math.random()*12}px`;
+    s.style.animationDelay=`${Math.random()*5}s`;
+    s.style.animationDuration=`${2+Math.random()*3}s`;
+    ov.appendChild(s);
+  }
+}
+
+let _lightningTimer=null;
+function scheduleLightning(){
+  clearTimeout(_lightningTimer);
+  _lightningTimer=setTimeout(()=>{
+    const el=document.getElementById('lightning');
+    el.style.background='rgba(230,250,255,.7)';
+    setTimeout(()=>el.style.background='rgba(0,0,0,0)',80);
+    setTimeout(()=>{el.style.background='rgba(230,250,255,.5)';setTimeout(()=>el.style.background='rgba(0,0,0,0)',60);},200);
+    scheduleLightning();
+  },4000+Math.random()*8000);
+}
+
+// ═══════════════════════════════════════════
+//  ADD STOP MODAL
+// ═══════════════════════════════════════════
+let _icon='🍔';
+function openModal(){_icon='🍔';document.querySelectorAll('.mi-btn').forEach(b=>b.classList.toggle('sel',b.dataset.icon==='🍔'));document.getElementById('modal-addr').value='';document.getElementById('modal-label').value='';document.getElementById('modal-err').textContent='';document.getElementById('modal-overlay').classList.add('show');setTimeout(()=>document.getElementById('modal-addr').focus(),100);}
+function closeModal(){document.getElementById('modal-overlay').classList.remove('show');}
+function pickIcon(btn){_icon=btn.dataset.icon;document.querySelectorAll('.mi-btn').forEach(b=>b.classList.toggle('sel',b===btn));}
+async function confirmStop(){
+  const addr=document.getElementById('modal-addr').value.trim();
+  const label=document.getElementById('modal-label').value.trim()||addr.split(',')[0].slice(0,18);
+  const errEl=document.getElementById('modal-err');
+  errEl.textContent='';
+  if(!addr){errEl.textContent='Please enter an address.';return;}
+  showLoad('Finding that stop...');
+  try{
+    const ll=await geocode(addr);
+    const frac=S.routePath.length?fracFor(S.routePath,ll.lat(),ll.lng()):.5;
+    S.stops.push({icon:_icon,label,fraction:frac});
+    S.stops.sort((a,b)=>a.fraction-b.fraction);
+    saveTrip();buildMarkers();hideLoad();closeModal();
+  }catch(err){hideLoad();errEl.textContent=err.message;}
+}
+
+// ═══════════════════════════════════════════
 //  HELPERS
-// ═══════════════════════════════════════════════════════
-function fmtTime(d) {
-  let h = d.getHours(), m = d.getMinutes().toString().padStart(2,'0');
-  const ap = h >= 12 ? 'PM' : 'AM';
-  return `${h % 12 || 12}:${m} ${ap}`;
-}
+// ═══════════════════════════════════════════
+function fmtTime(d){let h=d.getHours(),m=d.getMinutes().toString().padStart(2,'0'),ap=h>=12?'PM':'AM';return`${h%12||12}:${m} ${ap}`;}
+function showLoad(msg){document.getElementById('load-msg').textContent=msg;document.getElementById('loading').classList.add('show');}
+function hideLoad(){document.getElementById('loading').classList.remove('show');}
+function saveTrip(){localStorage.setItem('awty',JSON.stringify({origin:S.origin,dest:S.destination,totalDistM:S.totalDistM,totalDurS:S.totalDurS,milestones:S.milestones,stops:S.stops,routePath:S.routePath.filter((_,i)=>i%3===0),startedAt:Date.now()}));}
+function getSaved(){try{return JSON.parse(localStorage.getItem('awty')||'null');}catch{return null;}}
+function newTrip(){clearInterval(S.timer);localStorage.removeItem('awty');['arrived','modal-overlay'].forEach(id=>document.getElementById(id).classList.remove('show'));document.getElementById('main-screen').style.display='none';document.getElementById('setup-screen').style.display='flex';document.getElementById('stops-list').innerHTML='';['origin-input','dest-input'].forEach(id=>document.getElementById(id).value='');document.getElementById('setup-error').textContent='';}
 
-function showLoading(msg) { document.getElementById('loading-msg').textContent = msg; document.getElementById('loading').classList.add('show'); }
-function hideLoading()     { document.getElementById('loading').classList.remove('show'); }
+// ═══════════════════════════════════════════
+//  PARTICLE KEYFRAMES (injected)
+// ═══════════════════════════════════════════
+const _style=document.createElement('style');
+_style.textContent=`
+@keyframes dropFall{to{transform:translateY(60px);opacity:0}}
+@keyframes particleFly{to{transform:translate(var(--dx),var(--dy));opacity:0}}
+@keyframes twinkle{0%,100%{opacity:.4}50%{opacity:1}}
+`;
+document.head.appendChild(_style);
 
-function saveTrip() {
-  localStorage.setItem('awty', JSON.stringify({
-    origin: S.origin, dest: S.destination,
-    totalDistM: S.totalDistM, totalDurS: S.totalDurS,
-    milestones: S.milestones, stops: S.stops,
-    routePath: S.routePath.length > 200 ? S.routePath.filter((_,i) => i % 3 === 0) : S.routePath,
-    startedAt: Date.now(),
-  }));
-}
-
-function getSaved() {
-  try { return JSON.parse(localStorage.getItem('awty') || 'null'); } catch { return null; }
-}
-
-function newTrip() {
-  clearInterval(S.timer);
-  localStorage.removeItem('awty');
-  document.getElementById('arrived-overlay').classList.remove('show');
-  document.getElementById('main-screen').style.display = 'none';
-  document.getElementById('setup-screen').style.display = 'flex';
-  document.getElementById('stops-list').innerHTML = '';
-  document.getElementById('origin-input').value = '';
-  document.getElementById('dest-input').value   = '';
-  document.getElementById('setup-error').textContent = '';
-}
-
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════
 //  RESUME ON LOAD
-// ═══════════════════════════════════════════════════════
-(function init() {
-  const saved = getSaved();
-  if (!saved) return;
-  if ((Date.now() - saved.startedAt) / 3.6e6 > 14) { localStorage.removeItem('awty'); return; }
-
-  S.origin      = saved.origin;
-  S.destination = saved.dest;
-  S.totalDistM  = saved.totalDistM;
-  S.totalDurS   = saved.totalDurS;
-  S.milestones  = saved.milestones || [];
-  S.stops       = saved.stops      || [];
-  S.routePath   = saved.routePath  || [];
-
-  const elapsed = (Date.now() - saved.startedAt) / 1000;
-  S.progress    = Math.min(1, elapsed / S.totalDurS);
-  S.remDistM    = Math.max(0, S.totalDistM * (1 - S.progress));
-  S.remDurS     = Math.max(0, S.totalDurS  - elapsed);
-
-  launchMainScreen();
+// ═══════════════════════════════════════════
+(function init(){
+  const sv=getSaved(); if(!sv)return;
+  if((Date.now()-sv.startedAt)/3.6e6>14){localStorage.removeItem('awty');return;}
+  S.origin=sv.origin;S.destination=sv.dest;
+  S.totalDistM=sv.totalDistM;S.totalDurS=sv.totalDurS;
+  S.milestones=sv.milestones||[];S.stops=sv.stops||[];S.routePath=sv.routePath||[];
+  const el=(Date.now()-sv.startedAt)/1000;
+  S.progress=Math.min(1,el/S.totalDurS);
+  S.remDistM=Math.max(0,S.totalDistM*(1-S.progress));
+  S.remDurS =Math.max(0,S.totalDurS-el);
+  launchMain();
 })();
 </script>
 </body>
