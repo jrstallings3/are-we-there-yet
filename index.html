@@ -1526,8 +1526,12 @@ document.head.appendChild(_style);
 //  RESUME ON LOAD
 // ═══════════════════════════════════════════
 (function init(){
-  const sv=getSaved(); if(!sv)return;
-  if((Date.now()-sv.startedAt)/3.6e6>14){localStorage.removeItem('awty');return;}
+  const sv=getSaved();
+  if (!sv || (Date.now()-sv.startedAt)/3.6e6>14) {
+    if (sv) localStorage.removeItem('awty');
+    loadMaps().catch(()=>{}); // pre-load so autocomplete is ready on setup screen
+    return;
+  }
   S.origin=sv.origin;S.destination=sv.dest;
   S.totalDistM=sv.totalDistM;S.totalDurS=sv.totalDurS;
   S.milestones=sv.milestones||[];S.stops=sv.stops||[];S.routePath=sv.routePath||[];
@@ -1536,10 +1540,6 @@ document.head.appendChild(_style);
   S.remDistM=Math.max(0,S.totalDistM*(1-S.progress));
   S.remDurS =Math.max(0,S.totalDurS-el);
   launchMain();
-} else {
-  // Pre-load Maps API so autocomplete is ready before the user hits "Let's Go"
-  loadMaps().catch(()=>{});
-}
 })();
 </script>
 </body>
