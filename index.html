@@ -393,8 +393,8 @@
     .cloud-d .cloud-body::after  { width:36px; height:35px; top:-19px; left:44px; }
 
     @keyframes driftCloud {
-      from { transform: translateX(-200px); }
-      to   { transform: translateX(calc(100vw + 200px)); }
+      from { transform: translateX(calc(100vw + 250px)); }
+      to   { transform: translateX(-350px); }
     }
 
     .cloud.pop .cloud-body { animation: cloudPop .45s ease-out; }
@@ -418,12 +418,23 @@
     .h4 { width:200px; height: 80px; background:var(--hill-2); right:-10px; }
 
     .scene-tree {
-      position: absolute;
-      z-index: 4;
       cursor: pointer;
       user-select: none;
       font-size: clamp(1.6rem, 4vw, 2.6rem);
       transition: transform .15s;
+    }
+    .tree-drifter {
+      position: absolute;
+      left: 0;
+      z-index: 4;
+      animation: treeDrift 30s linear infinite;
+    }
+    #tree-l-d { bottom: 18%; animation-delay: -6s; }
+    #tree-m-d { bottom: 16%; animation-delay: -17s; }
+    #tree-r-d { bottom: 20%; animation-delay: -26s; }
+    @keyframes treeDrift {
+      from { transform: translateX(calc(100vw + 100px)); }
+      to   { transform: translateX(-200px); }
     }
     .scene-tree:active { transform: scale(.88); }
     .scene-tree.wobble { animation: treeWobble .5s ease-out; }
@@ -435,12 +446,20 @@
 
     /* ── ANIMALS ── */
     .animal {
-      position: absolute;
       font-size: clamp(1.4rem, 3.5vw, 2.2rem);
-      z-index: 6;
       cursor: pointer;
       user-select: none;
       transition: transform .15s;
+    }
+    .animal-drifter {
+      position: absolute;
+      left: 0;
+      z-index: 4;
+      animation: animalScroll 24s linear infinite;
+    }
+    @keyframes animalScroll {
+      from { transform: translateX(calc(100vw + 100px)); }
+      to   { transform: translateX(-200px); }
     }
     .animal.dance { animation: animalDance .55s ease-out; }
     @keyframes animalDance {
@@ -465,6 +484,11 @@
       height: 4px;
       background: repeating-linear-gradient(to right, var(--yellow) 0 34px, transparent 34px 68px);
       transform: translateY(-50%);
+      animation: dashScroll 1.2s linear infinite;
+    }
+    @keyframes dashScroll {
+      from { background-position: 0 0; }
+      to   { background-position: -68px 0; }
     }
     .road-edge { position: absolute; left: 0; right: 0; height: 4px; background: #C8B89A; }
     .road-edge.top { top: 0; }
@@ -495,6 +519,23 @@
     @keyframes carHonk {
       0%,100% { transform: translateX(-50%) translateY(0); }
       40%     { transform: translateX(-50%) translateY(-8px); }
+    }
+
+    /* Car bounce */
+    .car-bouncer { animation: carDrive 0.65s ease-in-out infinite; display:block; }
+    @keyframes carDrive {
+      0%,100% { transform: translateY(0px); }
+      50%     { transform: translateY(-3px); }
+    }
+    /* Wheel spin */
+    .wheel-spin {
+      animation: wheelSpin 0.9s linear infinite;
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+    @keyframes wheelSpin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
     }
 
     /* Speech bubble */
@@ -622,6 +663,14 @@
       color: var(--orange);
       letter-spacing: -.02em;
       filter: drop-shadow(0 1px 0 rgba(0,0,0,.08));
+    }
+    .app-title-group { display:flex; flex-direction:column; gap:0px; }
+    .trip-name-display {
+      font-size: clamp(.72rem, 1.6vw, .95rem);
+      font-weight: 800;
+      color: var(--grass-2);
+      letter-spacing: .01em;
+      line-height: 1.1;
     }
     .stats-row { display: flex; gap: 8px; }
     .stat {
@@ -823,6 +872,10 @@
   <div class="setup-sub">Let's plan your adventure!</div>
   <div class="setup-card">
     <div class="field-wrap">
+      <span class="field-label">✨ Trip Name</span>
+      <input class="field-input" id="trip-name-input" type="text" placeholder="e.g. Summer Road Trip 2025!" maxlength="40" />
+    </div>
+    <div class="field-wrap">
       <span class="field-label">🏠 Starting from</span>
       <input class="field-input" id="origin-input" placeholder="e.g. Indianapolis, IN" />
     </div>
@@ -851,20 +904,20 @@
   <div id="moon"></div>
 
   <!-- Clouds (each has inner .cloud-body for animation) -->
-  <div class="cloud cloud-a" style="left:-160px"  onclick="tapCloud(this)"><div class="cloud-body"></div></div>
-  <div class="cloud cloud-b" style="left:-130px"  onclick="tapCloud(this)"><div class="cloud-body"></div></div>
-  <div class="cloud cloud-c" style="left:-110px"  onclick="tapCloud(this)"><div class="cloud-body"></div></div>
-  <div class="cloud cloud-d" style="left:-180px"  onclick="tapCloud(this)"><div class="cloud-body"></div></div>
+  <div class="cloud cloud-a" style="left:0"  onclick="tapCloud(this)"><div class="cloud-body"></div></div>
+  <div class="cloud cloud-b" style="left:0"  onclick="tapCloud(this)"><div class="cloud-body"></div></div>
+  <div class="cloud cloud-c" style="left:0"  onclick="tapCloud(this)"><div class="cloud-body"></div></div>
+  <div class="cloud cloud-d" style="left:0"  onclick="tapCloud(this)"><div class="cloud-body"></div></div>
 
   <!-- Trees -->
-  <div class="scene-tree" id="tree-l" style="bottom:18%;left:8%"  onclick="tapTree(this)">🌲</div>
-  <div class="scene-tree" id="tree-m" style="bottom:16%;left:52%" onclick="tapTree(this)">🌳</div>
-  <div class="scene-tree" id="tree-r" style="bottom:20%;right:6%" onclick="tapTree(this)">🌲</div>
+  <div class="tree-drifter" id="tree-l-d"><div class="scene-tree" id="tree-l" onclick="tapTree(this)">🌲</div></div>
+  <div class="tree-drifter" id="tree-m-d"><div class="scene-tree" id="tree-m" onclick="tapTree(this)">🌳</div></div>
+  <div class="tree-drifter" id="tree-r-d"><div class="scene-tree" id="tree-r" onclick="tapTree(this)">🌲</div></div>
 
   <!-- Animals (populated by JS) -->
-  <div id="animal-1" class="animal" onclick="tapAnimal(this)"></div>
-  <div id="animal-2" class="animal" onclick="tapAnimal(this)"></div>
-  <div id="animal-3" class="animal" onclick="tapAnimal(this)"></div>
+  <div class="animal-drifter" id="animal-drifter-1"><div id="animal-1" class="animal" onclick="tapAnimal(this)"></div></div>
+  <div class="animal-drifter" id="animal-drifter-2"><div id="animal-2" class="animal" onclick="tapAnimal(this)"></div></div>
+  <div class="animal-drifter" id="animal-drifter-3"><div id="animal-3" class="animal" onclick="tapAnimal(this)"></div></div>
 
   <!-- Hills -->
   <div class="hill h1"></div>
@@ -882,6 +935,7 @@
   <!-- Audi Q7 car -->
   <div id="car-wrap" style="left:5%" onclick="tapCar()">
     <div id="honk-bubble">Beep beep! 📯</div>
+    <div class="car-bouncer">
     <svg class="car-svg" viewBox="0 0 200 78" xmlns="http://www.w3.org/2000/svg">
       <!-- drop shadow -->
       <ellipse cx="100" cy="75" rx="84" ry="3.5" fill="rgba(0,0,0,.13)"/>
@@ -940,19 +994,24 @@
       <circle cx="164" cy="72" r="13" fill="#1E1E1E"/>
       <circle cx="164" cy="72" r="9"  fill="#303030"/>
       <circle cx="164" cy="72" r="3.5" fill="#888"/>
-      <line x1="164" y1="59" x2="164" y2="85" stroke="#555" stroke-width="2"/>
-      <line x1="151" y1="72" x2="177" y2="72" stroke="#555" stroke-width="2"/>
-      <line x1="155" y1="62" x2="173" y2="82" stroke="#555" stroke-width="1.7"/>
-      <line x1="173" y1="62" x2="155" y2="82" stroke="#555" stroke-width="1.7"/>
+      <g class="wheel-spin">
+        <line x1="164" y1="59" x2="164" y2="85" stroke="#555" stroke-width="2"/>
+        <line x1="151" y1="72" x2="177" y2="72" stroke="#555" stroke-width="2"/>
+        <line x1="155" y1="62" x2="173" y2="82" stroke="#555" stroke-width="1.7"/>
+        <line x1="173" y1="62" x2="155" y2="82" stroke="#555" stroke-width="1.7"/>
+      </g>
       <!-- rear wheel -->
       <circle cx="48" cy="72" r="13" fill="#1E1E1E"/>
       <circle cx="48" cy="72" r="9"  fill="#303030"/>
       <circle cx="48" cy="72" r="3.5" fill="#888"/>
-      <line x1="48" y1="59" x2="48" y2="85" stroke="#555" stroke-width="2"/>
-      <line x1="35" y1="72" x2="61" y2="72" stroke="#555" stroke-width="2"/>
-      <line x1="39" y1="62" x2="57" y2="82" stroke="#555" stroke-width="1.7"/>
-      <line x1="57" y1="62" x2="39" y2="82" stroke="#555" stroke-width="1.7"/>
+      <g class="wheel-spin">
+        <line x1="48" y1="59" x2="48" y2="85" stroke="#555" stroke-width="2"/>
+        <line x1="35" y1="72" x2="61" y2="72" stroke="#555" stroke-width="2"/>
+        <line x1="39" y1="62" x2="57" y2="82" stroke="#555" stroke-width="1.7"/>
+        <line x1="57" y1="62" x2="39" y2="82" stroke="#555" stroke-width="1.7"/>
+      </g>
     </svg>
+    </div>
   </div>
 
   <!-- Route ends -->
@@ -967,7 +1026,10 @@
 
   <!-- Header -->
   <div class="header">
-    <div class="app-title">Are We There Yet?</div>
+    <div class="app-title-group">
+      <div class="app-title">Are We There Yet?</div>
+      <div class="trip-name-display" id="trip-name-display"></div>
+    </div>
     <div class="stats-row">
       <div class="stat"><span class="stat-val" id="stat-miles">--</span><span class="stat-lbl">miles left</span></div>
       <div class="stat"><span class="stat-val" id="stat-eta">--</span><span class="stat-lbl">arrive</span></div>
@@ -1006,7 +1068,7 @@ const CONFIG = {
 //  STATE
 // ═══════════════════════════════════════════
 let S = {
-  origin:'', destination:'',
+  origin:'', destination:'', tripName:'',
   totalDistM:0, totalDurS:0, remDistM:0, remDurS:0,
   milestones:[], stops:[], routePath:[], progress:0, timer:null,
 };
@@ -1188,9 +1250,10 @@ async function startTrip() {
   const setupStops = getSetupStops();
   showLoad('Planning your adventure...');
   try {
+    const tripName = document.getElementById('trip-name-input').value.trim();
     const result = await apiDirs(origin, dest, setupStops.map(s=>s.address));
     const {totalDistM,totalDurS,path,stopFracs} = parseRoute(result);
-    S.origin=origin; S.destination=dest;
+    S.origin=origin; S.destination=dest; S.tripName=tripName;
     S.totalDistM=totalDistM; S.totalDurS=totalDurS;
     S.remDistM=totalDistM; S.remDurS=totalDurS;
     S.routePath=path; S.progress=0;
@@ -1219,6 +1282,8 @@ function launchMain() {
   const clip = s=>s.split(',')[0].slice(0,13);
   document.getElementById('lbl-start').textContent = clip(S.origin);
   document.getElementById('lbl-end').textContent   = clip(S.destination);
+  const tn = document.getElementById('trip-name-display');
+  if(tn) tn.textContent = S.tripName || '';
   buildMarkers();
   buildSnackMeter();
   placeAnimals();
@@ -1266,16 +1331,15 @@ function buildSnackMeter() {
 const ANIMALS = ['🐄','🐷','🦊','🐰','🦔','🦋','🐸','🦜','🐿️','🦌','🐢','🐝','🦚','🦄','🐦'];
 function placeAnimals() {
   const picks = [...ANIMALS].sort(()=>Math.random()-.5).slice(0,3);
-  const spots = [
-    {bottom:'12%',left:'6%'},{bottom:'10%',left:'44%'},{bottom:'14%',right:'8%'}
-  ];
-  [1,2,3].forEach((n,i)=>{
-    const el = document.getElementById(`animal-${n}`);
-    el.textContent = picks[i];
-    const s = spots[i];
-    el.style.bottom = s.bottom;
-    if(s.left)  el.style.left  = s.left;
-    if(s.right) el.style.right = s.right;
+  const bottoms   = ['10%','12%','8%'];
+  const durations = [20, 28, 16];
+  const delays    = [-7, -14, -4];
+  [1,2,3].forEach((n,i) => {
+    const drifter = document.getElementById(`animal-drifter-${n}`);
+    drifter.style.bottom            = bottoms[i];
+    drifter.style.animationDuration = durations[i]+'s';
+    drifter.style.animationDelay    = delays[i]+'s';
+    document.getElementById(`animal-${n}`).textContent = picks[i];
   });
 }
 
@@ -1561,9 +1625,9 @@ async function confirmStop(){
 function fmtTime(d){let h=d.getHours(),m=d.getMinutes().toString().padStart(2,'0'),ap=h>=12?'PM':'AM';return`${h%12||12}:${m} ${ap}`;}
 function showLoad(msg){document.getElementById('load-msg').textContent=msg;document.getElementById('loading').classList.add('show');}
 function hideLoad(){document.getElementById('loading').classList.remove('show');}
-function saveTrip(){localStorage.setItem('awty',JSON.stringify({origin:S.origin,dest:S.destination,totalDistM:S.totalDistM,totalDurS:S.totalDurS,milestones:S.milestones,stops:S.stops,routePath:S.routePath.filter((_,i)=>i%3===0),startedAt:Date.now()}));}
+function saveTrip(){localStorage.setItem('awty',JSON.stringify({origin:S.origin,dest:S.destination,tripName:S.tripName,totalDistM:S.totalDistM,totalDurS:S.totalDurS,milestones:S.milestones,stops:S.stops,routePath:S.routePath.filter((_,i)=>i%3===0),startedAt:Date.now()}));}
 function getSaved(){try{return JSON.parse(localStorage.getItem('awty')||'null');}catch{return null;}}
-function newTrip(){clearInterval(S.timer);localStorage.removeItem('awty');['arrived','modal-overlay'].forEach(id=>document.getElementById(id).classList.remove('show'));document.getElementById('main-screen').style.display='none';document.getElementById('setup-screen').style.display='flex';document.getElementById('stops-list').innerHTML='';['origin-input','dest-input'].forEach(id=>document.getElementById(id).value='');document.getElementById('setup-error').textContent='';}
+function newTrip(){clearInterval(S.timer);localStorage.removeItem('awty');['arrived','modal-overlay'].forEach(id=>document.getElementById(id).classList.remove('show'));document.getElementById('main-screen').style.display='none';document.getElementById('setup-screen').style.display='flex';document.getElementById('stops-list').innerHTML='';['origin-input','dest-input','trip-name-input'].forEach(id=>document.getElementById(id).value='');document.getElementById('setup-error').textContent='';}
 
 // ═══════════════════════════════════════════
 //  PARTICLE KEYFRAMES (injected)
@@ -1592,6 +1656,7 @@ document.head.appendChild(_style);
     return;
   }
   S.origin=sv.origin;S.destination=sv.dest;
+  S.tripName=sv.tripName||'';
   S.totalDistM=sv.totalDistM;S.totalDurS=sv.totalDurS;
   S.milestones=sv.milestones||[];S.stops=sv.stops||[];S.routePath=sv.routePath||[];
   const el=(Date.now()-sv.startedAt)/1000;
