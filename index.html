@@ -1536,6 +1536,10 @@ document.head.appendChild(_style);
   S.remDistM=Math.max(0,S.totalDistM*(1-S.progress));
   S.remDurS =Math.max(0,S.totalDurS-el);
   launchMain();
+} else {
+  // Pre-load Maps API so autocomplete is ready before the user hits "Let's Go"
+  loadMaps().catch(()=>{});
+}
 })();
 </script>
 </body>
