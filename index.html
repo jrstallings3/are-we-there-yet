@@ -851,79 +851,76 @@
   <!-- Audi Q7 car -->
   <div id="car-wrap" style="left:5%" onclick="tapCar()">
     <div id="honk-bubble">Beep beep! 📯</div>
-    <svg class="car-svg" viewBox="0 0 220 90" xmlns="http://www.w3.org/2000/svg">
-      <!-- shadow -->
-      <ellipse cx="110" cy="87" rx="90" ry="4" fill="rgba(0,0,0,.15)"/>
-      <!-- main body -->
-      <path d="M 18,42 L 18,57 C 18,60 20,62 23,62 L 197,62 C 200,62 202,60 202,57 L 202,42 Z"
-            fill="#F6F6F6" stroke="#DCDCDC" stroke-width="1.2"/>
-      <!-- lower sill -->
-      <path d="M 24,57 L 196,57 L 200,62 L 20,62 Z" fill="#E4E4E4"/>
-      <!-- cabin / roof -->
-      <path d="M 58,42 L 68,18 L 162,18 L 175,42 Z" fill="#EFEFEF" stroke="#DCDCDC" stroke-width="1"/>
+    <svg class="car-svg" viewBox="0 0 200 78" xmlns="http://www.w3.org/2000/svg">
+      <!-- drop shadow -->
+      <ellipse cx="100" cy="75" rx="84" ry="3.5" fill="rgba(0,0,0,.13)"/>
+      <!-- unified body silhouette: hood + cabin + tail in one path -->
+      <path d="M 14,62 L 14,44 Q 14,40 18,40 L 36,40 Q 40,40 44,34
+               L 58,16 Q 60,14 64,14 L 152,14 Q 156,14 158,16
+               L 168,34 Q 171,40 175,40 L 184,40 Q 188,40 188,44
+               L 188,62 Q 188,66 184,66 L 18,66 Q 14,66 14,62 Z"
+            fill="#F5F5F5" stroke="#E0E0E0" stroke-width="1.5"/>
+      <!-- lower body accent / sill -->
+      <path d="M 20,60 L 180,60 L 184,66 L 16,66 Z" fill="#E8E8E8"/>
       <!-- windshield -->
-      <path d="M 60,42 L 70,20 L 116,20 L 116,42 Z" fill="#9BBFCC" opacity=".88" stroke="#B0C5CC" stroke-width=".8"/>
+      <path d="M 46,40 L 60,18 L 112,18 L 112,40 Z"
+            fill="#96BCCB" opacity=".9"/>
       <!-- rear window -->
-      <path d="M 120,42 L 120,20 L 158,20 L 170,42 Z" fill="#9BBFCC" opacity=".88" stroke="#B0C5CC" stroke-width=".8"/>
+      <path d="M 116,40 L 116,18 L 156,18 L 166,40 Z"
+            fill="#96BCCB" opacity=".9"/>
       <!-- B-pillar -->
-      <rect x="115" y="19" width="5" height="23" fill="#D8D8D8"/>
-      <!-- roof panel -->
-      <rect x="68" y="16" width="94" height="3" rx="1.5" fill="#E2E2E2"/>
-      <!-- roof rails -->
-      <rect x="70" y="15" width="90" height="1.8" rx=".9" fill="#BBBBBB"/>
-      <!-- front headlight DRL -->
-      <path d="M 192,36 L 202,36 L 202,40 L 192,40 Z" fill="#FFFAAA" opacity=".92"/>
-      <path d="M 195,36 L 202,36 L 202,37.5 Z" fill="white" opacity=".6"/>
-      <!-- front grille singleframe -->
-      <path d="M 180,44 L 202,44 L 202,57 L 180,57 Q 178,57 178,55 L 178,46 Q 178,44 180,44 Z"
-            fill="#181818"/>
-      <rect x="183" y="46" width="17" height="9" fill="#222"/>
-      <line x1="183" y1="48.5" x2="200" y2="48.5" stroke="#333" stroke-width=".8"/>
-      <line x1="183" y1="51.5" x2="200" y2="51.5" stroke="#333" stroke-width=".8"/>
-      <line x1="183" y1="54.5" x2="200" y2="54.5" stroke="#333" stroke-width=".8"/>
-      <line x1="189" y1="44"   x2="189" y2="57"   stroke="#333" stroke-width=".6"/>
-      <line x1="195" y1="44"   x2="195" y2="57"   stroke="#333" stroke-width=".6"/>
-      <!-- Audi 4 rings in grille -->
-      <circle cx="183.5" cy="50.5" r="2.8" fill="none" stroke="#777" stroke-width="1.2"/>
-      <circle cx="189"   cy="50.5" r="2.8" fill="none" stroke="#777" stroke-width="1.2"/>
-      <circle cx="194.5" cy="50.5" r="2.8" fill="none" stroke="#777" stroke-width="1.2"/>
-      <!-- fog light -->
-      <rect x="182" y="57" width="10" height="4" rx="2" fill="#FFFDE0" opacity=".75"/>
-      <!-- front bumper -->
-      <path d="M 179,57 L 202,57 L 202,62 L 183,62 Z" fill="#E8E8E8"/>
-      <!-- tail light -->
-      <path d="M 18,38 L 28,38 L 28,57 L 18,57 Q 16,57 16,55 L 16,40 Q 16,38 18,38 Z"
-            fill="#CC2222"/>
-      <path d="M 18,38 L 28,38 L 28,44 Z" fill="#FF6666" opacity=".55"/>
-      <rect x="18" y="52" width="9" height="4" rx="1.2" fill="white" opacity=".65"/>
-      <!-- rear bumper -->
-      <path d="M 18,57 L 40,57 L 40,62 L 18,62 Z" fill="#E8E8E8"/>
+      <rect x="111" y="17" width="5" height="23" fill="#DCDCDC"/>
+      <!-- roof rail -->
+      <rect x="60" y="13" width="96" height="2.5" rx="1.25" fill="#D4D4D4"/>
       <!-- door handles -->
-      <rect x="76" y="40" width="14" height="3.5" rx="1.75" fill="#CCCCCC"/>
-      <rect x="134" y="40" width="14" height="3.5" rx="1.75" fill="#CCCCCC"/>
-      <!-- character crease line -->
-      <path d="M 30,47 L 178,47" stroke="#DCDCDC" stroke-width=".9" opacity=".8"/>
+      <rect x="68"  y="47" width="13" height="3" rx="1.5" fill="#CCCCCC"/>
+      <rect x="122" y="47" width="13" height="3" rx="1.5" fill="#CCCCCC"/>
+      <!-- Audi 4 rings badge -->
+      <circle cx="84"   cy="54" r="2.6" fill="none" stroke="#C8C8C8" stroke-width="1.3"/>
+      <circle cx="89.2" cy="54" r="2.6" fill="none" stroke="#C8C8C8" stroke-width="1.3"/>
+      <circle cx="94.4" cy="54" r="2.6" fill="none" stroke="#C8C8C8" stroke-width="1.3"/>
+      <circle cx="99.6" cy="54" r="2.6" fill="none" stroke="#C8C8C8" stroke-width="1.3"/>
+      <!-- front LED DRL strip -->
+      <rect x="178" y="37" width="10" height="4" rx="2" fill="#FFF5AA" opacity=".95"/>
+      <!-- front grille (Singleframe) -->
+      <path d="M 174,43 L 188,43 L 188,58 L 176,58 Q 174,58 174,56 L 174,45 Q 174,43 176,43 Z"
+            fill="#1A1A1A"/>
+      <line x1="175" y1="47" x2="187" y2="47" stroke="#2C2C2C" stroke-width=".9"/>
+      <line x1="175" y1="50.5" x2="187" y2="50.5" stroke="#2C2C2C" stroke-width=".9"/>
+      <line x1="175" y1="54" x2="187" y2="54" stroke="#2C2C2C" stroke-width=".9"/>
+      <!-- 3 Audi rings in grille -->
+      <circle cx="178" cy="50.5" r="2.5" fill="none" stroke="#888" stroke-width="1.1"/>
+      <circle cx="183" cy="50.5" r="2.5" fill="none" stroke="#888" stroke-width="1.1"/>
+      <!-- front bumper lower -->
+      <path d="M 173,58 L 188,58 L 188,66 L 177,66 Z" fill="#E6E6E6"/>
+      <!-- fog light -->
+      <rect x="176" y="59" width="8" height="4" rx="2" fill="#FFFDE0" opacity=".7"/>
+      <!-- tail lights -->
+      <path d="M 14,40 L 22,40 L 22,58 L 14,58 Q 12,58 12,56 L 12,42 Q 12,40 14,40 Z"
+            fill="#CC2020"/>
+      <path d="M 14,40 L 22,40 L 22,47 Z" fill="#FF6666" opacity=".5"/>
+      <rect x="13" y="53" width="8" height="4" rx="1.5" fill="white" opacity=".6"/>
+      <!-- rear bumper lower -->
+      <path d="M 12,58 L 36,58 L 36,66 L 14,66 Z" fill="#E6E6E6"/>
       <!-- wheel arches -->
-      <path d="M 148,62 Q 145,80 170,80 Q 195,80 192,62" fill="#E2E2E2" stroke="#D0D0D0" stroke-width=".9"/>
-      <path d="M 34,62  Q 31,80 56,80  Q 81,80  78,62"  fill="#E2E2E2" stroke="#D0D0D0" stroke-width=".9"/>
+      <path d="M 146,66 Q 144,78 164,78 Q 184,78 182,66" fill="#EBEBEB" stroke="#D8D8D8" stroke-width=".9"/>
+      <path d="M 30,66  Q 28,78  48,78  Q  68,78  66,66"  fill="#EBEBEB" stroke="#D8D8D8" stroke-width=".9"/>
       <!-- front wheel -->
-      <circle cx="170" cy="76" r="14" fill="#1C1C1C"/>
-      <circle cx="170" cy="76" r="9.5" fill="#303030"/>
-      <circle cx="170" cy="76" r="3.8" fill="#888"/>
-      <line x1="170" y1="62" x2="170" y2="90" stroke="#555" stroke-width="2.2"/>
-      <line x1="156" y1="76" x2="184" y2="76" stroke="#555" stroke-width="2.2"/>
-      <line x1="159" y1="65.5" x2="181" y2="86.5" stroke="#555" stroke-width="1.8"/>
-      <line x1="181" y1="65.5" x2="159" y2="86.5" stroke="#555" stroke-width="1.8"/>
-      <circle cx="170" cy="76" r="7" fill="none" stroke="#444" stroke-width=".9"/>
+      <circle cx="164" cy="72" r="13" fill="#1E1E1E"/>
+      <circle cx="164" cy="72" r="9"  fill="#303030"/>
+      <circle cx="164" cy="72" r="3.5" fill="#888"/>
+      <line x1="164" y1="59" x2="164" y2="85" stroke="#555" stroke-width="2"/>
+      <line x1="151" y1="72" x2="177" y2="72" stroke="#555" stroke-width="2"/>
+      <line x1="155" y1="62" x2="173" y2="82" stroke="#555" stroke-width="1.7"/>
+      <line x1="173" y1="62" x2="155" y2="82" stroke="#555" stroke-width="1.7"/>
       <!-- rear wheel -->
-      <circle cx="56" cy="76" r="14" fill="#1C1C1C"/>
-      <circle cx="56" cy="76" r="9.5" fill="#303030"/>
-      <circle cx="56" cy="76" r="3.8" fill="#888"/>
-      <line x1="56" y1="62" x2="56" y2="90" stroke="#555" stroke-width="2.2"/>
-      <line x1="42" y1="76" x2="70" y2="76" stroke="#555" stroke-width="2.2"/>
-      <line x1="45" y1="65.5" x2="67" y2="86.5" stroke="#555" stroke-width="1.8"/>
-      <line x1="67" y1="65.5" x2="45" y2="86.5" stroke="#555" stroke-width="1.8"/>
-      <circle cx="56" cy="76" r="7" fill="none" stroke="#444" stroke-width=".9"/>
+      <circle cx="48" cy="72" r="13" fill="#1E1E1E"/>
+      <circle cx="48" cy="72" r="9"  fill="#303030"/>
+      <circle cx="48" cy="72" r="3.5" fill="#888"/>
+      <line x1="48" y1="59" x2="48" y2="85" stroke="#555" stroke-width="2"/>
+      <line x1="35" y1="72" x2="61" y2="72" stroke="#555" stroke-width="2"/>
+      <line x1="39" y1="62" x2="57" y2="82" stroke="#555" stroke-width="1.7"/>
+      <line x1="57" y1="62" x2="39" y2="82" stroke="#555" stroke-width="1.7"/>
     </svg>
   </div>
 
@@ -999,7 +996,9 @@ function addSetupStop() {
     <input class="stop-addr-inp" placeholder="City or address" />
     <button class="stop-rm-btn" onclick="this.parentElement.remove()">✕</button>`;
   list.appendChild(row);
-  row.querySelector('input').focus();
+  const inp = row.querySelector('input');
+  inp.focus();
+  applyAutocomplete(inp);
 }
 function getSetupStops() {
   return Array.from(document.querySelectorAll('.stop-row')).map(r => ({
@@ -1015,14 +1014,29 @@ let _maps = null;
 function loadMaps() {
   if (_maps) return _maps;
   _maps = new Promise((res, rej) => {
-    if (window.google?.maps) { res(); return; }
-    window.__mapsLoaded = res;
+    if (window.google?.maps) { res(); initAutocompl(); return; }
+    window.__mapsLoaded = () => { res(); initAutocompl(); };
     const s = document.createElement('script');
-    s.src = `https://maps.googleapis.com/maps/api/js?key=${CONFIG.API_KEY}&callback=__mapsLoaded`;
+    s.src = `https://maps.googleapis.com/maps/api/js?key=${CONFIG.API_KEY}&libraries=places&callback=__mapsLoaded`;
     s.onerror = () => rej(new Error('Could not load Google Maps. Check your API key.'));
     document.head.appendChild(s);
   });
   return _maps;
+}
+
+function applyAutocomplete(input) {
+  if (!window.google?.maps?.places || input._ac) return;
+  const ac = new google.maps.places.Autocomplete(input, { types: ['geocode'], fields: ['formatted_address'] });
+  google.maps.event.addListener(ac, 'place_changed', () => {
+    const p = ac.getPlace();
+    if (p.formatted_address) input.value = p.formatted_address;
+  });
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') e.stopPropagation(); });
+  input._ac = ac;
+}
+function initAutocompl() {
+  applyAutocomplete(document.getElementById('origin-input'));
+  applyAutocomplete(document.getElementById('dest-input'));
 }
 
 async function apiDirs(origin, dest, wpts = []) {
@@ -1463,7 +1477,7 @@ function scheduleLightning(){
 //  ADD STOP MODAL
 // ═══════════════════════════════════════════
 let _icon='🍔';
-function openModal(){_icon='🍔';document.querySelectorAll('.mi-btn').forEach(b=>b.classList.toggle('sel',b.dataset.icon==='🍔'));document.getElementById('modal-addr').value='';document.getElementById('modal-label').value='';document.getElementById('modal-err').textContent='';document.getElementById('modal-overlay').classList.add('show');setTimeout(()=>document.getElementById('modal-addr').focus(),100);}
+function openModal(){_icon='🍔';document.querySelectorAll('.mi-btn').forEach(b=>b.classList.toggle('sel',b.dataset.icon==='🍔'));document.getElementById('modal-addr').value='';document.getElementById('modal-label').value='';document.getElementById('modal-err').textContent='';document.getElementById('modal-overlay').classList.add('show');setTimeout(()=>{ const a=document.getElementById('modal-addr'); a.focus(); applyAutocomplete(a); },100);}
 function closeModal(){document.getElementById('modal-overlay').classList.remove('show');}
 function pickIcon(btn){_icon=btn.dataset.icon;document.querySelectorAll('.mi-btn').forEach(b=>b.classList.toggle('sel',b===btn));}
 async function confirmStop(){
@@ -1500,6 +1514,11 @@ _style.textContent=`
 @keyframes dropFall{to{transform:translateY(60px);opacity:0}}
 @keyframes particleFly{to{transform:translate(var(--dx),var(--dy));opacity:0}}
 @keyframes twinkle{0%,100%{opacity:.4}50%{opacity:1}}
+.pac-container{border-radius:14px;border:none;box-shadow:0 8px 28px rgba(62,39,35,.16);font-family:'Nunito',sans-serif;z-index:10000!important;margin-top:4px;}
+.pac-item{padding:8px 14px;font-size:.88rem;font-family:'Nunito',sans-serif;cursor:pointer;}
+.pac-item:hover,.pac-item-selected{background:#FFF4EA;}
+.pac-item-query{font-weight:700;color:#3E2723;}
+.pac-icon{display:none;}
 `;
 document.head.appendChild(_style);
 
