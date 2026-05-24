@@ -624,28 +624,49 @@ function ptAtFraction(pts, f) {
 }
 
 // ═══════════════════════════════════════════════════════
-//  API CALLS
+//  MAPS JS API LOADER  (avoids CORS issues with REST endpoints)
 // ═══════════════════════════════════════════════════════
+let _mapsReady = null;
+function loadMapsAPI() {
+  if (_mapsReady) return _mapsReady;
+  _mapsReady = new Promise((resolve, reject) => {
+    if (window.google?.maps) { resolve(); return; }
+    window.__mapsLoaded = resolve;
+    const s = document.createElement('script');
+    s.src = `https://maps.googleapis.com/maps/api/js?key=${CONFIG.API_KEY}&callback=__mapsLoaded`;
+    s.onerror = () => reject(new Error('Could not load Google Maps. Check your API key and that Maps JavaScript API is enabled.'));
+    document.head.appendChild(s);
+  });
+  return _mapsReady;
+}
+
 async function apiDirections(origin, dest) {
-  const u = `https://maps.googleapis.com/maps/api/directions/json`
-    + `?origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(dest)}&key=${CONFIG.API_KEY}`;
-  const r = await fetch(u);
-  if (!r.ok) throw new Error('Network error fetching route');
-  const d = await r.json();
-  if (d.status !== 'OK') throw new Error(d.error_message || `Directions API: ${d.status}`);
-  return d;
+  await loadMapsAPI();
+  const svc = new google.maps.DirectionsService();
+  return new Promise((resolve, reject) => {
+    svc.route({
+      origin,
+      destination: dest,
+      travelMode: google.maps.TravelMode.DRIVING,
+    }, (result, status) => {
+      if (status === google.maps.DirectionsStatus.OK) resolve(result);
+      else reject(new Error(`Could not find that route (${status}). Try being more specific.`));
+    });
+  });
 }
 
 async function apiReverseGeocode(lat, lng) {
-  const u = `https://maps.googleapis.com/maps/api/geocode/json`
-    + `?latlng=${lat},${lng}&result_type=locality|administrative_area_level_1&key=${CONFIG.API_KEY}`;
-  const r = await fetch(u);
-  const d = await r.json();
-  if (d.status !== 'OK' || !d.results.length) return null;
-  const comps = d.results[0].address_components;
-  const loc = comps.find(c => c.types.includes('locality'));
-  const adm = comps.find(c => c.types.includes('administrative_area_level_1'));
-  return (loc || adm)?.short_name || null;
+  await loadMapsAPI();
+  const geocoder = new google.maps.Geocoder();
+  return new Promise((resolve) => {
+    geocoder.geocode({ location: { lat, lng } }, (results, status) => {
+      if (status !== 'OK' || !results?.length) { resolve(null); return; }
+      const comps = results[0].address_components;
+      const loc = comps.find(c => c.types.includes('locality'));
+      const adm = comps.find(c => c.types.includes('administrative_area_level_1'));
+      resolve((loc || adm)?.short_name || null);
+    });
+  });
 }
 
 // ═══════════════════════════════════════════════════════
@@ -675,7 +696,8 @@ async function startTrip() {
     S.progress    = 0;
 
     // Milestone cities at 25 / 50 / 75 %
-    const pts = decodePolyline(route.overview_polyline.encoded);
+    // overview_path is already decoded LatLng array from the JS API
+    const pts = route.overview_path.map(p => ({ lat: p.lat(), lng: p.lng() }));
     showLoading('Finding cities along the way...');
     const fracs = [0.25, 0.5, 0.75];
     S.milestones = await Promise.all(fracs.map(async f => {
